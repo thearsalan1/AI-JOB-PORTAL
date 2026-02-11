@@ -151,7 +151,7 @@ export const resetPassword = async(req: Request, res: Response) => {
 export const verify = async (req: AuthRequest, res: Response) => {
   try {
     
-    const user = await User.findById(req.user.userId);
+    const user = await User.findById(req.user!.userId);
     if (!user) {
       return res.status(400).json({ success: false, message: "User not found" });
     }

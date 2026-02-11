@@ -1,11 +1,5 @@
 import nodemailer from 'nodemailer';
 
-// Debug: Log email config
-console.log('Email Configuration:');
-console.log('HOST:', process.env.EMAIL_HOST);
-console.log('PORT:', process.env.EMAIL_PORT);
-console.log('USER:', process.env.EMAIL_USER);
-console.log('PASS:', process.env.EMAIL_PASSWORD ? '***SET***' : 'NOT SET');
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
