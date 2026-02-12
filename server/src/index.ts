@@ -6,6 +6,7 @@ import connectDB from "./config/db";
 import authRoutes from './routes/authRoutes'
 import usreRoutes from './routes/userRoutes'
 import profileRoutes from './routes/ProfileRoutes'
+import skillRoutes from './routes/skillsRoutes'
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth',authRoutes)
 app.use('/api/users',usreRoutes);
 app.use('/api/profiles',profileRoutes)
+app.use('/api/skills',skillRoutes)
 
 app.get('/health',(req:Request,res:Response)=>{
   res.status(200).json({success:true,message:"server is running"});

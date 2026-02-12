@@ -43,3 +43,24 @@ export interface IEmployerProfile extends Document{
   description?:string;
   website?:string;
 }
+
+
+export interface ISkill extends Document{
+  name:string;
+  category:string;
+}
+
+
+export interface IUserSkill extends Document{
+  userId:mongoose.Types.ObjectId;
+  skill_id:mongoose.Types.ObjectId;
+  level:1|2|3|4|5;
+  years_experience?:number;
+}
+
+
+export interface IJobSkill extends Document{
+  job_id:mongoose.Types.ObjectId;
+  skill_id:mongoose.Types.ObjectId;
+  required_level:1|2|3|4|5;
+}

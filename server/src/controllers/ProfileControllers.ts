@@ -60,10 +60,13 @@ export const getSeekerProfile = async (req: AuthRequest, res: Response) => {
 
 export const updateSeekerProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const { user_id, ...updates } = req.body;
+    const { updates } = req.body;
+    const userId=(req.user!.userId);
+    
+    
     
     const profile = await jobSeekerProfile.findOneAndUpdate(
-      { user_id: req.user!.userId },
+      { user_id: userId },
       updates,
       { new: true, runValidators: true }
     );
@@ -142,13 +145,13 @@ export const getEmployerProfile = async (req: AuthRequest, res: Response) => {
   }
 }
 
-export const updateEmployerProfile = async (req: Request, res: Response) => {
+export const updateEmployerProfile = async (req: AuthRequest, res: Response) => {
   try {
     const { updates } = req.body;
-    const id = req.params.id
+    const userId=(req.user!.userId);
     
     const profile = await EmployerProfile.findOneAndUpdate(
-      { id},
+      {userId},
       updates,
       { new: true, runValidators: true }  
     );
