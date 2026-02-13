@@ -64,3 +64,26 @@ export interface IJobSkill extends Document{
   skill_id:mongoose.Types.ObjectId;
   required_level:1|2|3|4|5;
 }
+
+export interface IResume extends Document{
+  user_id:mongoose.Types.ObjectId;
+  file_url:string;
+  file_name:string,
+  file_size:number,
+  mime_type:string,
+  uploadAt:Date;
+  is_shared: boolean;  
+}
+
+export interface IResumeParsedData extends Document{
+  resume_id:mongoose.Types.ObjectId;
+  extracted_name: string;
+  extracted_email: string;
+  phone?: string;
+  skills: string[];
+  experience_years: number;
+  education: string[];
+  current_role?: string;
+  parsedAt: Date;
+  confidence_score?: number;
+}

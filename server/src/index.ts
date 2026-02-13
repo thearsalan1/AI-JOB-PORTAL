@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes'
 import usreRoutes from './routes/userRoutes'
 import profileRoutes from './routes/ProfileRoutes'
 import skillRoutes from './routes/skillsRoutes'
+import resumeRoutes from './routes/resumeRoutes'
 
 const app = express();
 
@@ -15,10 +16,11 @@ app.use(cors());
 app.use(express.json());
 
 // routes
-app.use('/api/auth',authRoutes)
+app.use('/api/auth',authRoutes);
 app.use('/api/users',usreRoutes);
-app.use('/api/profiles',profileRoutes)
-app.use('/api/skills',skillRoutes)
+app.use('/api/profiles',profileRoutes);
+app.use('/api/skills',skillRoutes);
+app.use('/api/resume', resumeRoutes);
 
 app.get('/health',(req:Request,res:Response)=>{
   res.status(200).json({success:true,message:"server is running"});
