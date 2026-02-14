@@ -87,3 +87,17 @@ export interface IResumeParsedData extends Document{
   parsedAt: Date;
   confidence_score?: number;
 }
+
+export interface IJob extends Document{
+  employer_id:mongoose.Types.ObjectId;
+  title:string,
+  description:string;
+  salary_min:number;
+  salary_max?:number;
+  location:string;
+  remote:boolean;
+  skills:mongoose.Types.ObjectId[];
+  status:'open' | 'closed';
+  applications_count:number;
+  views:number;
+}

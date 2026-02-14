@@ -213,7 +213,6 @@ export const updateParsedData = async (req: AuthRequest, res: Response) => {
 };
 
 
-// NEW #3: CREATE RESUME (JSON create, no file)
 export const createResume = async (req: AuthRequest, res: Response) => {
   try {
     // Sanitize instead of spreading req.body directly
@@ -241,7 +240,6 @@ export const createResume = async (req: AuthRequest, res: Response) => {
 };
 
 
-// NEW #7: SHARED DOWNLOAD (employer access)
 export const shareResume = async (req: Request, res: Response) => {
   try {
     const resume = await Resume.findById(req.params.id);
