@@ -101,3 +101,13 @@ export interface IJob extends Document{
   applications_count:number;
   views:number;
 }
+
+export interface IApplication extends Document {
+  seeker_id:mongoose.Types.ObjectId;
+  job_id:mongoose.Types.ObjectId;
+  resume_id?:mongoose.Types.ObjectId;
+  status:'applied' | 'shortlisted' | 'rejected' | 'hired';
+  appliedAt:Date;
+  updatedAt:Date;
+  notes?:string;
+}

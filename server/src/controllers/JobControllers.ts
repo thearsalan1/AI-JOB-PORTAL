@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
 import  {AuthRequest}  from '../types/types'
 import { Job } from '../models/Job'
-import { log } from 'console';
-
 
 
 export const createJob = async (req:AuthRequest, res:Response)=>{
@@ -139,7 +137,6 @@ export const getSavedJobs = async (req:AuthRequest, res:Response)=>{
 
 export const toggleSaveJob = async (req: AuthRequest, res: Response) => {
   try {
-    // Mock toggle - real implementation Day 6
     res.json({ message: 'Job saved/unsaved' });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
