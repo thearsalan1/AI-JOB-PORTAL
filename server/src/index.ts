@@ -10,6 +10,7 @@ import skillRoutes from './routes/skillsRoutes'
 import resumeRoutes from './routes/resumeRoutes'
 import jobRoutes from './routes/jobRoutes';
 import applicationRoutes from './routes/applicationsRoutes';
+import matchRoutes from './routes/matchRoutes';
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/skills',skillRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/jobs',jobRoutes);
 app.use('/api/applications',applicationRoutes);
+app.use('/api/matches',matchRoutes);
 
 app.get('/health',(req:Request,res:Response)=>{
   res.status(200).json({success:true,message:"server is running"});

@@ -111,3 +111,14 @@ export interface IApplication extends Document {
   updatedAt:Date;
   notes?:string;
 }
+
+
+export interface IJobMatch extends Document {
+  seeker_id: mongoose.Types.ObjectId;
+  job_id: mongoose.Types.ObjectId;
+  match_score: number;
+  reasons: string[];
+  skill_matches: { skill: string; user_level: number; job_level: number }[];
+  createdAt: Date;
+  updatedAt: Date;
+}
