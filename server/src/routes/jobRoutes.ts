@@ -6,15 +6,20 @@ const router = Router();
 
 // Public routes
 router.get('/', getJobs);
-router.get('/:id', getJobById);
 
-// Protected routes (employers only)
-router.use(authMiddleware)
+// Protected routes
+router.use(authMiddleware);
+
+// Saved jobs routes
+router.get('/saved', getSavedJobs);
+router.post('/:id/save', toggleSaveJob);
+
+// Job routes
+router.get('/:id', getJobById);
 router.post('/', createJob);
 router.put('/:id', updatejob);
 router.delete('/:id', deleteJob);
 router.patch('/:id/close', closeJob);
-router.get('/saved',getSavedJobs);
-router.post('/:id/save',toggleSaveJob);
+
 
 export default router;

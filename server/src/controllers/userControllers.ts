@@ -92,14 +92,14 @@ export const getAllEmployers = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: AuthRequest, res: Response) => {
   try {
-    const { role, ...updates } = req.body; 
+    const { role, ...updates } = req.body;
     
     // Update only the authenticated user's profile
     const user = await User.findByIdAndUpdate(
       req.user!.userId,  
       updates,
       { new: true, runValidators: true }  
-    );
+    ).select('-password');
     
     if (!user) {
       return res.status(404).json({ error: 'User not found' });

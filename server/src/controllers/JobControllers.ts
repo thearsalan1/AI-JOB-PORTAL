@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 import  {AuthRequest}  from '../types/types'
 import { Job } from '../models/Job'
+import { SavedJobs } from '../models/SavedJobs'
 
 
 export const createJob = async (req:AuthRequest, res:Response)=>{
   try {
-    console.log(req.user);
     
     if(req.user?.role !== 'employer'){
       return res.status(403).json({message:'Only employers can create jobs'})
@@ -35,6 +35,7 @@ export const getJobs = async(req:Request, res:Response)=>{
 
     const jobs = await Job.find(query)
       .populate('employer_id', 'name')
+      .populate('skills','name')
       .limit(+(limit))
       .skip((+page - 1) * (+limit))
       .sort({ createdAt: -1 });
@@ -53,7 +54,9 @@ export const getJobs = async(req:Request, res:Response)=>{
 export const getJobById = async (req:Request, res:Response)=>{
   try {
     const {id}= req.params
-    const job = await Job.findById(id).populate('employer_id', 'name');
+    const job = await Job.findById(id).populate('employer_id', 'name')
+    .populate('skills','name')
+    ;
     if(!job){
       return res.status(404).json({message:'Job not found'})
     }
@@ -78,7 +81,7 @@ export const updatejob = async (req:AuthRequest,res:Response)=>{
       return res.status(403).json({message:'You can only update your own jobs'})
     }
 
-    const updated = await Job.findByIdAndUpdate(id,req.body,{new:true})
+    const updated = await Job.findByIdAndUpdate(id,req.body,{new:true}).populate('skills','name')
     res.status(200).json(updated)
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
@@ -123,21 +126,44 @@ export const closeJob = async (req:AuthRequest, res:Response)=>{
 
 export const getSavedJobs = async (req:AuthRequest, res:Response)=>{
   try {
-    if(req.user!.role!=='jobseeker'){
-      return res.status(403).json({message:'Only job seekers can view saved jobs'})
+    console.log("Req come");
+    
+    if(req.user!.role!=='seeker'){
+      return res.status(403).json({message:'Only job seekers can get saved jobs'})
     }
-    const savedJobs = await Job.find({ /* saved logic */ })
-      .populate('employer_id');
-    res.json(savedJobs);
+    const userId = req.user!.userId;
+    const jobs = await SavedJobs.find({user_id:userId})
+    .populate('job_id','title description salary_max location remote skills status ').lean();
+    return res.status(200).json(jobs)
   } catch(error){
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: 'get saved jobs error' });
   }
 }
 
 
 export const toggleSaveJob = async (req: AuthRequest, res: Response) => {
   try {
-    res.json({ message: 'Job saved/unsaved' });
+    if(req.user!.role!=='seeker'){
+      return res.status(403).json({message:'Only job seekers can save jobs'})
+    }
+    const jobId = req.params.id
+    const job = await Job.findById(jobId)
+    if(!job){
+      return res.status(404).json({message:"Job not found"})
+    }
+    const existing = await SavedJobs.findOne({ job_id: jobId, user_id: req.user?.userId });
+    if(existing){
+      await SavedJobs.deleteOne({job_id:jobId,user_id:req.user?.userId});
+      return res.status(200).json({ message: "Job unsaved successfully" });
+    }else{
+      const savedJob = new SavedJobs({
+        job_id: jobId,
+        user_id: req.user?.userId,
+      });
+      await savedJob.save();
+
+      return res.status(201).json({message:"Job saved successfully"})
+    }
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

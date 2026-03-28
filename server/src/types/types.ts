@@ -122,3 +122,28 @@ export interface IJobMatch extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+
+export interface IDashboardStats extends Document {
+  total_users: number;
+  total_jobs: number;
+  total_applications: number;
+  total_matches:number;
+  avg_match_score: number;
+  updatedAt: Date;
+}
+
+
+export interface IUserActivity extends Document {
+  user_id: mongoose.Types.ObjectId;
+  action: 'view_job' | 'save_job' | 'apply_job';
+  job_id?: mongoose.Types.ObjectId;
+  createdAt: Date;
+  read: boolean;
+}
+
+export interface ISavedJobs extends Document {
+  user_id: mongoose.Types.ObjectId;
+  job_id:mongoose.Types.ObjectId;
+  createdAt:Date;
+}

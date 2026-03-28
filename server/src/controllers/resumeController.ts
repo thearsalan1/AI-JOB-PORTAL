@@ -46,8 +46,8 @@ export const uploadResume = async (req: AuthRequest, res: Response) => {
     res.status(201).json(resume);
 
   } catch (error) {
-    console.error('uploadResume error:', error);   // add this
-    res.status(500).json({ error: 'Upload failed', details: (error as Error).message });  // add this
+    console.error('uploadResume error:', error); 
+    res.status(500).json({ error: 'Upload failed', details: (error as Error).message }); 
   } finally {
     if (tempFilePath && fs.existsSync(tempFilePath)) {
       fs.unlinkSync(tempFilePath);

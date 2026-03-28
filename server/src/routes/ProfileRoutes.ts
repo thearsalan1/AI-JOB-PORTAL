@@ -20,6 +20,6 @@ router.put('/seeker', authMiddleware, updateSeekerProfile);
 // Employer Profile Routes
 router.post('/employer', authMiddleware, createEmployerProfile);
 router.get('/employer', authMiddleware, getEmployerProfile);
-router.put('/employer/:id', authMiddleware, updateEmployerProfile);
+router.put('/employer', authMiddleware, updateEmployerProfile);
 
 export default router;
