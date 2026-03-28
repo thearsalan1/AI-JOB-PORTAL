@@ -112,7 +112,7 @@ export const getJobApplications = async (req: AuthRequest, res: Response) => {
     if (!job) {
       return res
         .status(404)
-        .json({ error: "Job not found or unauthorized" });
+        .json({ error: "Job not found" });
     }
 
     const { page = 1, limit = 10, status } = req.query;

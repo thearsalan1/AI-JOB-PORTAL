@@ -147,3 +147,14 @@ export interface ISavedJobs extends Document {
   job_id:mongoose.Types.ObjectId;
   createdAt:Date;
 }
+
+export interface ParsedResume {
+  extracted_name: string;
+  extracted_email: string;
+  phone?: string;
+  skills?: string[];
+  experience_years: number;
+  education: string[];
+  current_role: string;
+  confidence_score: number;
+}
