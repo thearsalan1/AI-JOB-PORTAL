@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { AuthRequest } from "../types/types";
 import { Job } from "../models/Job";
 import { Application } from "../models/Application";
+import { sendApplicationStatusNotification } from "../services/Notification.service";
+import { EmployerProfile } from "../models/EmployerProfile";
+import mongoose from "mongoose";
 
 const VALID_STATUSES = ["applied", "shortlisted", "rejected", "hired"] as const;
 const MAX_LIMIT = 100;
@@ -169,9 +172,16 @@ export const updateApplicationStatus = async (
     }
 
     // Fetch application and verify ownership through the job
-    const application = await Application.findById(req.params.id).populate<{
-      job_id: { employer_id: { toString: () => string } };
-    }>("job_id", "employer_id");
+    const application = await Application.findById(req.params.id)
+  .populate<{
+    job_id: {
+      title:       string;           // ✅ ye add karo
+      employer_id: { 
+        _id:      mongoose.Types.ObjectId; 
+        toString: () => string 
+      };
+    };
+  }>("job_id", "employer_id title"); 
 
     if (!application) {
       return res.status(404).json({ error: "Application not found" });
@@ -180,7 +190,6 @@ export const updateApplicationStatus = async (
     if (application.job_id.employer_id.toString() !== req.user!.userId) {
       return res.status(403).json({ error: "Unauthorized" });
     }
-
     application.status = status;
     if (notes !== undefined) application.notes = notes;
     await application.save();
@@ -189,7 +198,19 @@ export const updateApplicationStatus = async (
       "seeker_id",
       "name email"
     );
+    const seeker = updated!.seeker_id as any;
+    const employerProfile = await EmployerProfile.findOne({
+      user_id: application.job_id.employer_id,
+    }).select("company_nmae");
 
+    await sendApplicationStatusNotification({
+      status,
+      seekerEmail: seeker.email,
+      seekerName:  seeker.name,
+      jobTitle:    application.job_id.title,
+      companyName: employerProfile?.company_nmae ?? "Company",  // schema ka exact typo use kiya
+      notes,
+    });
     return res.json(updated);
   } catch (error) {
     console.error("updateApplicationStatus error:", error);
