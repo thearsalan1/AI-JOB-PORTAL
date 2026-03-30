@@ -13,6 +13,6 @@ router.get('/stats', authorizeRole('admin'), getPlatformStats);
 router.post('/activity', trackActivity);
 router.get('/notifications', getNotifications);
 router.patch('/notifications/:id/read', markNotificationRead);
-router.post('/skill', createSkill);  // Admin only later
+router.post('/skill', createSkill); 
 
 export default router;
