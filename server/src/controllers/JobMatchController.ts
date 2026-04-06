@@ -69,39 +69,49 @@ export const recalculateMatches = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ error: 'Seekers only' });
     }
 
-    // Cooldown check
-    const recent = await JobMatch.findOne({ seeker_id: req.user!.userId })
-      .sort({ updatedAt: -1 });
-
-    if (recent && (Date.now() - new Date(recent.updatedAt).getTime()) < 60 * 60 * 1000) {
-      return res.status(429).json({ error: 'Please wait at least 1 hour before recalculating' });
-    }
-
     const jobs = await Job.find({ status: 'open' }).limit(100);
 
+    const results: any[] = [];
     const batchSize = 10;
+
     for (let i = 0; i < jobs.length; i += batchSize) {
       const batch = jobs.slice(i, i + batchSize);
-      await Promise.all(batch.map(async (job) => {
-        const { score, skill_matches } = await calculateMatchScore(
-          req.user!.userId,
-          job._id.toString()
-        );
-        await JobMatch.findOneAndUpdate(
-          { seeker_id: req.user!.userId, job_id: job._id },
-          {
-            seeker_id: req.user!.userId,
+      await Promise.all(
+        batch.map(async (job) => {
+          const { score, skill_matches } = await calculateMatchScore(
+            req.user!.userId,
+            job._id.toString()
+          );
+
+          // Save to JobMatch collection
+          await JobMatch.findOneAndUpdate(
+            { seeker_id: req.user!.userId, job_id: job._id },
+            {
+              seeker_id: req.user!.userId,
+              job_id: job._id,
+              match_score: score,
+              reasons: [`${score}% skill match`],
+              skill_matches
+            },
+            { upsert: true }
+          );
+
+          // Collect result for response
+          results.push({
             job_id: job._id,
-            match_score: score,
-            reasons: [`${score}% skill match`],
+            title: job.title,
+            score,
             skill_matches
-          },
-          { upsert: true }
-        );
-      }));
+          });
+        })
+      );
     }
 
-    res.json({ message: 'Matches recalculated successfully', jobs_processed: jobs.length });
+    res.json({
+      message: 'Matches recalculated successfully',
+      jobs_processed: jobs.length,
+      results
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -117,7 +127,7 @@ export const getRecommendations = async (req: AuthRequest, res: Response) => {
       seeker_id: req.user!.userId,
       match_score: { $gte: 80 }
     })
-      .populate('job_id', 'title salary_min location employer_id') // ✅ fixed fields
+      .populate('job_id', 'title salary_min location employer_id')
       .sort({ match_score: -1 })
       .limit(5);
 

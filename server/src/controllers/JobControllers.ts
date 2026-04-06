@@ -2,25 +2,59 @@ import { Request, Response } from 'express'
 import  {AuthRequest}  from '../types/types'
 import { Job } from '../models/Job'
 import { SavedJobs } from '../models/SavedJobs'
+import { JobSkill } from '../models/JobSkill'
+import mongoose from 'mongoose'
 
-
-export const createJob = async (req:AuthRequest, res:Response)=>{
+export const createJob = async (req: AuthRequest, res: Response) => {
+  let session: mongoose.ClientSession | null = null;
   try {
-    
-    if(req.user?.role !== 'employer'){
-      return res.status(403).json({message:'Only employers can create jobs'})
+    if (req.user?.role !== 'employer') {
+      return res.status(403).json({ message: 'Only employers can create jobs' });
     }
-    
-    const job =new Job({
-      employer_id:req.user!.userId,
-      ...req.body
-    })
-    await job.save()
-    res.status(201).json(job)
+
+    const { skills,required_level, ...jobData } = req.body;
+
+    if (!Array.isArray(skills)) {
+      return res.status(400).json({ message: 'Skills must be an array' });
+    }
+
+    session = await mongoose.startSession();
+    session.startTransaction();
+
+    const job = new Job({
+      employer_id: req.user!.userId,
+      ...jobData
+    });
+    await job.save({ session });
+
+    const jobId = job._id;
+    await Promise.all(
+  skills.map(s => {
+    const jobSkill = new JobSkill({
+      job_id:jobId,
+      skill_id: s.skill_id,
+      required_level: s.required_level ?? 3
+    });
+    return jobSkill.save({ session });
+  })
+);
+console.log(skills);
+
+
+    await session.commitTransaction();
+    res.status(201).json(job);
   } catch (error) {
+    if (session) {
+      await session.abortTransaction();
+    }
+    console.error(error);
     res.status(500).json({ error: 'Server error' });
+  } finally {
+    if (session) {
+      session.endSession();
+    }
   }
-}
+};
 
 
 export const getJobs = async(req:Request, res:Response)=>{

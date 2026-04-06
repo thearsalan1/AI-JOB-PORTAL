@@ -10,7 +10,7 @@ const SkillSchema:Schema=new Schema<ISkill>({
   category:{
     type:String,
     required:true,
-    enum: ['Frontend', 'Backend', 'Database', 'DevOps', 'Mobile', 'Other']
+    enum: ['Frontend', 'Backend', 'Database', 'DevOps', 'Language','Artificial Intelligence','MlOps', 'Other']
   }
 },{timestamps:true})
 
