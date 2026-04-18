@@ -20,8 +20,6 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
       html,
     });
 
-    console.log('Message sent successfully: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     return info;
   } catch (error) {
     console.error('Error sending email:', error);
