@@ -44,7 +44,7 @@ const Page = () => {
             {/* Password */}
             <div className="flex justify-between items-center">
               <label className="font-semibold text-sm">Password</label>
-              <Link href="#" className="text-sm text-[#00a897]">
+              <Link href={"/forget-password"} className="text-sm text-[#00a897]">
                 Forgot?
               </Link>
             </div>
@@ -83,7 +83,7 @@ const Page = () => {
           {/* Footer */}
           <p className="text-sm text-center opacity-60">
             Don't have an account?{" "}
-            <Link href="#" className="text-[#00a897] font-bold">
+            <Link href="sign-up" className="text-[#00a897] font-bold">
               Create one
             </Link>
           </p>
