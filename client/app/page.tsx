@@ -1,17 +1,26 @@
 import Image from "next/image";
+import Navbar from "./components/Homepage/Navbar";
+import Hero from "./components/Homepage/Hero";
+import HeroFooter from "./components/Homepage/HeroFooter";
+import Working from "./components/Homepage/Working";
+import Categories from "./components/Homepage/Category";
+import FeaturedJobs from "./components/Homepage/FeaturedJobs";
+import Community from "./components/Homepage/Community";
+import Adver from "./components/Homepage/Adver";
+import Footer from "./components/Homepage/Footer";
 
 export default function Home() {
   return (
-    <div >
-      <h1 className="font-heading text-4xl">
-  TEST FONT
-</h1>
-      <div className="font-heading">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi, delectus. Facere explicabo doloribus, excepturi alias numquam provident magnam maxime nemo blanditiis. Quia numquam perspiciatis eum doloremque facilis repudiandae maiores amet?
-      </div>
-      <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae aliquam quas quod, dolore animi omnis aspernatur minus maxime impedit, ducimus sequi, cum laboriosam natus est placeat architecto! Vitae, itaque eum.
-      </div>
+    <div>
+      <Navbar/>
+      <Hero/>
+      <HeroFooter/>
+      <Working/>
+      <Categories/>
+      <FeaturedJobs/>
+      <Community/>
+      <Adver/>
+      <Footer/>
     </div>
   );
 }
