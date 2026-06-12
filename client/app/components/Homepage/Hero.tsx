@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const Hero = () => {
@@ -52,9 +53,9 @@ const Hero = () => {
 
       {/* CTA Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mt-4 w-full sm:w-auto">
-        <button className="px-5 py-2 rounded-full font-bold text-sm bg-white text-black hover:bg-gray-100">
+        <Link href={"/dashboard"} className="px-5 py-2 rounded-full font-bold text-sm bg-white text-black hover:bg-gray-100">
           I'm a job seeker
-        </button>
+        </Link>
         <button className="px-5 py-2 rounded-full font-bold text-sm bg-white text-black hover:bg-gray-100">
           I'm an employer
         </button>

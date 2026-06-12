@@ -10,7 +10,7 @@ export default function MainLayout({
   return (
     <div className="flex min-h-screen">
 
-      <aside className="w-64 bg-white border-r border-2 border-gray-300 hidden md:block">
+      <aside className="w-64 bg-white border-r border-2 border-gray-300 hidden md:block ">
         <Sidebar />
       </aside>
 
@@ -29,7 +29,7 @@ export default function MainLayout({
         </main>
 
         {/* Footer */}
-        <footer className="bg-white border-t">
+        <footer className="bg-white border-t border-gray-300">
           <Footer />
         </footer>
 

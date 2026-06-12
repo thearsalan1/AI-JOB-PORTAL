@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-import { BsStars } from "react-icons/bs";
+import { BsBuildingsFill, BsStars } from "react-icons/bs";
 import { FaArrowRight, FaRegEye } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
 
@@ -103,6 +103,34 @@ const recommendedJobs = [
   },
 ];
 
+const recentActivities = [
+  {
+    "id":1,
+    "title": "Staff Product Designer",
+    "company": "Figma Design Inc",
+    "posted": "2h ago"
+  },
+  {
+    "id":2,
+    "title": "Lead React Engineer",
+    "company": "Meta Platforms",
+    "posted": "5h ago"
+  },
+  {
+    "id":3,
+    "title": "Design Systems Architect",
+    "company": "Apple",
+    "posted": "Yesterday"
+  },
+  {
+    "id":4,
+    "title": "Senior Web Developer",
+    "company": "Netflix",
+    "posted": "2 days ago"
+  }
+]
+
+
 const Page = () => {
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6">
@@ -198,8 +226,28 @@ const Page = () => {
         </div>
 
         {/* RIGHT SIDE (optional later) */}
-        <div className="hidden lg:block">
+        <div className="hidden lg:block ">
           {/* You can add activity / profile / suggestions here */}
+          <div className="bg-white rounded-2xl p-4 ">
+            <h1 className="text-xl sm:text-2xl font-semibold flex items-center mb-5">
+             Recently viewed</h1>
+            {recentActivities.map((activity)=>(
+              <div key={activity.id} className="flex gap-2 mb-2 p-1 hover:shadow-xs cursor-pointer">
+                <div className="rounded-xl bg-gray-100 p-4">
+                  <BsBuildingsFill color="#555e68"/>
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <div className="leading-tight">
+                    <h1 className="font-semibold text-gray-800">{activity.title}</h1>
+                    <span className="text-sm font-light text-gray-700">{activity.company}</span>
+                  </div>
+                  <span className="text-xs text-gray-400 ">{activity.posted}</span>
+                </div>
+              </div>
+            ))}
+            <button className="text-[#1a3c6e]  w-full mt-1 cursor-pointer p-1 rounded-2xl  hover:bg-gray-100 hover:transition-all hover:duration-300">Clear history</button>
+          </div>
+          <div></div>
         </div>
       </div>
     </div>
