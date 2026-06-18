@@ -1,13 +1,45 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { FiBriefcase } from "react-icons/fi";
 import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import SingInDesign from "@/app/components/auth/SingInDesign";
+import useLogin from "@/app/hooks/auth/useLogin";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 
 const Page = () => {
+  const loginMutation = useLogin();
+  const [email, setEmail]= useState("");
+  const [password,setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit =async (e:React.FormEvent)=>{
+    e.preventDefault()
+    try {
+      const data =await loginMutation.mutateAsync({
+        email,
+        password
+      })
+      console.log("Response:", data); 
+      toast.success("Login successfully")
+      localStorage.setItem("token",data.data.token)
+      localStorage.setItem("role",data.data.user.role)
+      router.push('/dashboard')
+      
+    } catch (error:any) {
+      console.log("Login Error:", error);
+
+    toast.error(
+      error?.data?.message ||
+      "Something went wrong"
+    );
+    }
+  }
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-screen">
 
@@ -29,7 +61,7 @@ const Page = () => {
             Enter your professional details to access your account.
           </p>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             {/* Email */}
             <label className="font-semibold text-sm">Email address</label>
             <div className="relative w-full mb-4">
@@ -38,6 +70,8 @@ const Page = () => {
                 type="email"
                 placeholder="name@company.com"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
             </div>
 
@@ -55,6 +89,8 @@ const Page = () => {
                 type="password"
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                onChange={(e)=>setPassword(e.target.value)}
+                value={password}
               />
               <FaEye className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
             </div>

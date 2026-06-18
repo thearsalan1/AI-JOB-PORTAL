@@ -1,5 +1,9 @@
+"use client"
+import useForgotPass from "@/app/hooks/auth/useForgotPass";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { CiMail } from "react-icons/ci";
 import { FaArrowLeft, FaArrowRight, FaShieldAlt } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
@@ -7,6 +11,30 @@ import { IoBagOutline } from "react-icons/io5";
 import { LuShieldCheck } from "react-icons/lu";
 
 const Page = () => {
+  const [email,setEmail]= useState("");
+  const forgotPassword = useForgotPass();
+  const router = useRouter()
+
+  const handleSubmit =async (e:React.FormEvent)=>{
+    e.preventDefault();
+    try {
+      const response = await forgotPassword.mutateAsync({
+        email
+      })
+      console.log(response);
+      if (response?.message === "OTP sent successfully") {
+      toast.success(response.message);
+      setTimeout(() => router.push(`/reset-password?email=${encodeURIComponent(email)}`), 1500);
+    } else {
+      toast.error(response?.message || "OTP Failed to send");
+    }
+    } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message ||
+      "OTP Failed to send"
+    );
+  }
+  }
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 relative overflow-hidden">
 
@@ -59,7 +87,7 @@ const Page = () => {
           </p>
 
           {/* FORM */}
-          <form className="w-full">
+          <form className="w-full" onClick={handleSubmit}>
             <label className="font-semibold text-sm">
               Email address
             </label>
@@ -73,10 +101,12 @@ const Page = () => {
                 type="email"
                 placeholder="name@company.com"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
               />
             </div>
 
-            <button className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4">
+            <button className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4" >
               Send Reset Link
               <FaArrowRight />
             </button>

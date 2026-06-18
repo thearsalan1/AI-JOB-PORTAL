@@ -1,12 +1,55 @@
+"use client";
+import useResetPass from "@/app/hooks/auth/useResetPass";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaArrowLeft, FaArrowRight, FaEye, FaShieldAlt } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
 import { IoLockClosedOutline } from "react-icons/io5";
 
 const Page = () => {
+  const [otp, setOtp] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const resetPass = useResetPass();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Email required");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    if (!otp || !newPassword || !confirmPassword) {
+      toast.error("All fields are required");
+      return;
+    }
+    try {
+      const res = await resetPass.mutateAsync({
+        email,
+        otp,
+        newPassword,
+      });
+      console.log(res);
+      if (res.data.message === "Password reset successful") {
+        toast.success("Password change successfully try to login");
+        router.push("/sign-in");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Invalid otp or unable to change password");
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 font-heading relative">
-
       {/* Top Background */}
       <div className="absolute top-0 left-0 w-full h-[25vh] bg-gray-100 z-0" />
 
@@ -21,7 +64,6 @@ const Page = () => {
       {/* MAIN */}
       <main className="flex-1 flex items-center justify-center px-4 py-6 sm:py-10">
         <div className="w-full max-w-md sm:max-w-lg bg-white rounded-2xl shadow-xl relative overflow-hidden py-6 sm:py-8 px-4 sm:px-8 flex flex-col items-center gap-5">
-
           {/* Icon */}
           <div className="flex items-center justify-center h-14 w-14 sm:h-20 sm:w-20 rounded-2xl bg-gray-100 border border-gray-300">
             <FaShieldAlt size={22} className="sm:text-[30px]" color="#1a3c6e" />
@@ -37,18 +79,41 @@ const Page = () => {
           </p>
 
           {/* FORM */}
-          <form className="w-full">
+          <form className="w-full" onSubmit={handleSubmit}>
+            {/* OTP */}
+            <label className="font-semibold text-sm">OTP</label>
+            <div className="relative w-full mb-3">
+              <FaShieldAlt
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
+              <input
+                type="number"
+                placeholder="Enter OTP"
+                className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            </div>
 
             {/* Password */}
             <label className="font-semibold text-sm">Password</label>
             <div className="relative w-full mb-3">
-              <IoLockClosedOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <IoLockClosedOutline
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
               <input
                 type="password"
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
-              <FaEye className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <FaEye
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
             </div>
 
             <hr className="mb-3 opacity-60" />
@@ -58,24 +123,34 @@ const Page = () => {
             </p>
 
             {/* Confirm Password */}
-            <label className="font-semibold text-sm">
-              Confirm Password
-            </label>
+            <label className="font-semibold text-sm">Confirm Password</label>
 
             <div className="relative w-full mb-5">
-              <IoLockClosedOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <IoLockClosedOutline
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
               <input
                 type="password"
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <FaEye className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <FaEye
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
             </div>
 
             {/* Button */}
-            <button className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4">
-              Update Password
-              <FaArrowRight />
+            <button
+              type="submit"
+              disabled={resetPass.isPending}
+              className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4 disabled:opacity-50"
+            >
+              {resetPass.isPending ? "Updating..." : "Update Password"}
+              {!resetPass.isPending && <FaArrowRight />}
             </button>
           </form>
 
