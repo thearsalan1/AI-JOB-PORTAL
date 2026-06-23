@@ -87,7 +87,7 @@ const Page = () => {
           </p>
 
           {/* FORM */}
-          <form className="w-full" onClick={handleSubmit}>
+          <form className="w-full" onSubmit={handleSubmit}>
             <label className="font-semibold text-sm">
               Email address
             </label>

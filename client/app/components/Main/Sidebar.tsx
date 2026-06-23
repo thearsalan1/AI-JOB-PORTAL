@@ -1,7 +1,8 @@
 "use client";
 
+import { useAuthStore } from "@/app/store/authStore";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { CiUser } from "react-icons/ci";
 import { FaBookmark, FaSearch, FaStar } from "react-icons/fa";
@@ -44,9 +45,16 @@ const Navigates = [
   },
 ];
 
+
 const Sidebar = () => {
   const pathname = usePathname();
-
+  const {logout} = useAuthStore()
+  const router = useRouter()
+  
+  const handleLogOut = ()=>{
+    logout();
+    router.push("/sign-in");
+  }
   return (
     <aside className="flex flex-col justify-between h-full p-4 font-heading">
 
@@ -74,10 +82,10 @@ const Sidebar = () => {
       </div>
 
       {/* Logout */}
-      <Link href={'/sign-in'} className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition">
+      <button  onClick={handleLogOut} className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition">
         <IoExitOutline size={18} />
         Log out
-      </Link>
+      </button>
     </aside>
   );
 };

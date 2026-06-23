@@ -10,6 +10,7 @@ import SingInDesign from "@/app/components/auth/SingInDesign";
 import useLogin from "@/app/hooks/auth/useLogin";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store/authStore";
 
 
 const Page = () => {
@@ -17,6 +18,7 @@ const Page = () => {
   const [email, setEmail]= useState("");
   const [password,setPassword] = useState("");
   const router = useRouter();
+  const {setAuth} = useAuthStore()
 
   const handleSubmit =async (e:React.FormEvent)=>{
     e.preventDefault()
@@ -25,17 +27,15 @@ const Page = () => {
         email,
         password
       })
-      console.log("Response:", data); 
       toast.success("Login successfully")
-      localStorage.setItem("token",data.data.token)
-      localStorage.setItem("role",data.data.user.role)
+      setAuth(data.data.user,data.data.token)
       router.push('/dashboard')
       
     } catch (error:any) {
       console.log("Login Error:", error);
 
     toast.error(
-      error?.data?.message ||
+      error?.response?.data?.message ||
       "Something went wrong"
     );
     }

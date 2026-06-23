@@ -15,8 +15,14 @@ export const registerUser = async (data: {
   password: string;
   role: string;
 }) => {
-  const response = await api.post("/auth/register", data);
-  return response.data;
+  try {
+    const response = await api.post("/auth/register", data);
+    console.log("Register response:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.log("Register error details:", error?.response?.data); // ← ye add karo
+    throw error;
+  }
 };
 
 export const forgotPassword = async (data: { email: string }) => {

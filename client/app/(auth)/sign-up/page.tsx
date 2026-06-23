@@ -1,5 +1,6 @@
 "use client";
 import useRegister from "@/app/hooks/auth/useRegister";
+import { useAuthStore } from "@/app/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -20,6 +21,8 @@ const Page = () => {
   const [error, setError] = useState("");
   const registerationMutation = useRegister();
   const router = useRouter();
+  const {setAuth} = useAuthStore();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +30,8 @@ const Page = () => {
     toast.error("Passwords do not match");
     return;
   }
+  console.log(password," ",confirmPassword);
+  
 
     try {
       const response = await registerationMutation.mutateAsync({
@@ -38,8 +43,7 @@ const Page = () => {
 
       console.log(response);
       toast.success("Account Created");
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("role", response.user.role);
+      setAuth(response.user,response.token)
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Registration Failed");
@@ -87,10 +91,10 @@ const Page = () => {
               Job Seeker
             </button>
             <button
-              className={`flex-1 font-semibold p-2 rounded-2xl transition-all duration-300 ${focus === "employeer" ? "bg-gray-200" : ""}`}
+              className={`flex-1 font-semibold p-2 rounded-2xl transition-all duration-300 ${focus === "employer" ? "bg-gray-200" : ""}`}
               onClick={() => {
-                setFocus("employeer");
-                setRole("employeer");
+                setFocus("employer");
+                setRole("employer");
               }}
             >
               <MdBusiness className="inline mr-1" />
