@@ -1,9 +1,159 @@
-import React from 'react'
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { MdLocationOn } from "react-icons/md";
+import { BsStars } from "react-icons/bs";
+import { FaArrowRight } from "react-icons/fa";
+import useGetMatches from "@/app/hooks/matches/useGetMatches";
+import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
+import { FaRegStar, FaStar } from "react-icons/fa";
 
-const Page = () => {
+// Match score color
+const getScoreColor = (score: number) => {
+  if (score >= 90) return "bg-green-100 text-green-600";
+  if (score >= 80) return "bg-blue-100 text-blue-600";
+  return "bg-yellow-100 text-yellow-600";
+};
+
+// Job Card
+const RecommendationCard = ({ match }: { match: any }) => {
+  const router = useRouter();
+  const job = match.job_id;
+  const { saved, saveMutation } = useSaveJob(job?._id);
+
   return (
-    <div>Page</div>
-  )
-}
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-3">
+          <div className="flex justify-center items-center rounded-xl border p-2 border-gray-200 h-11 w-11 shrink-0">
+            <HiOfficeBuilding size={20} color="#1a3c6e" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-gray-800">{job?.title}</h2>
+            <span className="text-sm text-gray-400">
+              <MdLocationOn className="inline mr-1" />
+              {job?.location}
+            </span>
+          </div>
+        </div>
+        {/* Match Score */}
+        <span
+          className={`text-xs font-bold px-3 py-1 rounded-full ${getScoreColor(match.match_score)}`}
+        >
+          {match.match_score}% Match
+        </span>
+      </div>
 
-export default Page
+      {/* Salary */}
+      <p className="text-sm text-emerald-500 mb-3">
+        ${job?.salary_min?.toLocaleString()} / year
+      </p>
+
+      {/* Reasons */}
+      {match.reasons?.length > 0 && (
+        <div className="mb-4">
+          <p className="text-xs text-gray-400 mb-2">Why this match?</p>
+          <div className="flex flex-wrap gap-2">
+            {match.reasons.map((reason: string, i: number) => (
+              <span
+                key={i}
+                className="text-xs bg-[#1a3c6e]/10 text-[#1a3c6e] px-2 py-1 rounded-full"
+              >
+                {reason}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex justify-between items-center">
+        <button
+          onClick={() => saveMutation.mutate()}
+          disabled={saveMutation.isPending}
+        >
+          {saved ? (
+            <FaStar size={16} color="#1a3c6e" />
+          ) : (
+            <FaRegStar
+              size={16}
+              className="text-gray-400 hover:text-[#1a3c6e] transition"
+            />
+          )}
+        </button>
+        <button
+          onClick={() => router.push(`/jobs/${job?._id}`)}
+          className="flex items-center gap-1 px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition"
+        >
+          View Details <FaArrowRight size={10} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Main Page
+const Page = () => {
+  const [minScore, setMinScore] = useState(70);
+  const { data, isLoading } = useGetMatches(minScore);
+  const matches = data?.matches ?? [];
+
+  return (
+    <div className="px-4 sm:px-6 lg:px-10 py-6">
+      {/* Header */}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
+            <BsStars className="text-[#00a897]" />
+            Recommendations
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            AI scanned jobs matching your profile — {matches.length} found
+          </p>
+        </div>
+
+        {/* Min Score Filter */}
+        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-2">
+          <span className="text-sm text-gray-500">Min Match:</span>
+          <input
+            type="range"
+            min="50"
+            max="95"
+            step="5"
+            value={minScore}
+            onChange={(e) => setMinScore(Number(e.target.value))}
+            className="w-24 accent-[#1a3c6e]"
+          />
+          <span className="text-sm font-semibold text-[#1a3c6e]">
+            {minScore}%+
+          </span>
+        </div>
+      </div>
+
+      {/* Loading */}
+      {isLoading && (
+        <div className="text-center text-gray-400 py-20">Loading...</div>
+      )}
+
+      {/* Empty */}
+      {!isLoading && matches.length === 0 && (
+        <div className="text-center text-gray-400 py-20">
+          <BsStars size={40} className="mx-auto mb-4 opacity-20" />
+          <p>No matches found for {minScore}%+ score</p>
+          <p className="text-sm mt-1">Try lowering the minimum match score</p>
+        </div>
+      )}
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {matches.map((match: any) => (
+          <RecommendationCard key={match._id} match={match} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Page;
