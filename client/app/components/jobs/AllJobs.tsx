@@ -1,157 +1,126 @@
-import React from 'react'
+"use client";
+import Image from "next/image";
+import React, { useState } from "react";
+import { FaClock } from "react-icons/fa";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { MdLocationOn } from "react-icons/md";
+import Select from "react-select";
+import { useJobs } from "@/app/hooks/jobs/useJobs";
 
-const jobs =[
-  {
-    "id": 1,
-    "title": "Senior Product Designer",
-    "company": "Stripe",
-    "location": "Remote (Global)",
-    "posted": "2h ago",
-    "experience": "5+ years",
-    "employmentType": "Full-time",
-    "salary": "$140k - $180k",
-    "description": "Lead the design of next-generation payment infrastructure products and create intuitive user experiences.",
-    "featured": true,
-    "logo": "/logos/stripe.png"
-  },
-  {
-    "id": 2,
-    "title": "Full Stack Engineer (React/Go)",
-    "company": "Discord",
-    "location": "San Francisco, CA",
-    "posted": "5h ago",
-    "experience": "3+ years",
-    "employmentType": "Full-time",
-    "salary": "$160k - $210k",
-    "description": "Build highly scalable messaging features and backend services for millions of users.",
-    "featured": false,
-    "logo": "/logos/discord.png"
-  },
-  {
-    "id": 3,
-    "title": "Marketing Growth Specialist",
-    "company": "Airbnb",
-    "location": "London, UK",
-    "posted": "1d ago",
-    "experience": "2+ years",
-    "employmentType": "Contract",
-    "salary": "$65k - $90k",
-    "description": "Drive user acquisition through data-driven marketing campaigns and growth experiments.",
-    "featured": false,
-    "logo": "/logos/airbnb.png"
-  },
-  {
-    "id": 4,
-    "title": "Frontend Developer",
-    "company": "Spotify",
-    "location": "Stockholm, Sweden",
-    "posted": "3h ago",
-    "experience": "2+ years",
-    "employmentType": "Full-time",
-    "salary": "$90k - $130k",
-    "description": "Develop responsive web applications and improve user engagement across platforms.",
-    "featured": false,
-    "logo": "/logos/spotify.png"
-  },
-  {
-    "id": 5,
-    "title": "Backend Engineer",
-    "company": "Uber",
-    "location": "New York, NY",
-    "posted": "8h ago",
-    "experience": "4+ years",
-    "employmentType": "Full-time",
-    "salary": "$150k - $200k",
-    "description": "Design distributed systems and APIs that power critical transportation services.",
-    "featured": true,
-    "logo": "/logos/uber.png"
-  },
-  {
-    "id": 6,
-    "title": "DevOps Engineer",
-    "company": "Netflix",
-    "location": "Los Angeles, CA",
-    "posted": "6h ago",
-    "experience": "3+ years",
-    "employmentType": "Remote",
-    "salary": "$130k - $190k",
-    "description": "Maintain cloud infrastructure and automate deployment pipelines at scale.",
-    "featured": false,
-    "logo": "/logos/netflix.png"
-  },
-  {
-    "id": 7,
-    "title": "Data Scientist",
-    "company": "Google",
-    "location": "Bangalore, India",
-    "posted": "12h ago",
-    "experience": "3+ years",
-    "employmentType": "Full-time",
-    "salary": "$110k - $170k",
-    "description": "Build machine learning models and derive insights from large datasets.",
-    "featured": false,
-    "logo": "/logos/google.png"
-  },
-  {
-    "id": 8,
-    "title": "UI/UX Designer",
-    "company": "Figma",
-    "location": "Remote",
-    "posted": "4h ago",
-    "experience": "2+ years",
-    "employmentType": "Full-time",
-    "salary": "$95k - $140k",
-    "description": "Create user-centered designs and collaborate closely with product teams.",
-    "featured": false,
-    "logo": "/logos/figma.png"
-  },
-  {
-    "id": 9,
-    "title": "Mobile App Developer",
-    "company": "TikTok",
-    "location": "Singapore",
-    "posted": "10h ago",
-    "experience": "3+ years",
-    "employmentType": "Full-time",
-    "salary": "$120k - $180k",
-    "description": "Develop and optimize mobile applications used by millions of users worldwide.",
-    "featured": true,
-    "logo": "/logos/tiktok.png"
-  },
-  {
-    "id": 10,
-    "title": "Cloud Solutions Architect",
-    "company": "Microsoft",
-    "location": "Seattle, WA",
-    "posted": "1d ago",
-    "experience": "5+ years",
-    "employmentType": "Full-time",
-    "salary": "$170k - $240k",
-    "description": "Design enterprise cloud architectures and guide customers on Azure adoption.",
-    "featured": false,
-    "logo": "/logos/microsoft.png"
-  }
-]
+const sortOptions = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "salary_high", label: "Salary: High to Low" },
+  { value: "salary_low", label: "Salary: Low to High" },
+];
 
 const AllJobs = () => {
-  return (
-    <div className='bg-white min-h-screen w-full rounded-2xl p-5'>
-      <div className='ml-5 mb-4'>
-        <h1 className='text-[#1a3c6e] font-bold text-4xl font-heading'>All Jobs</h1>
-      <p className='text-sm mt-2 text-gray-700'>
-        Showing 548 open roles across all categories
-      </p>
-      </div>
-      {jobs.map((job)=>(
-        <div
-        key={job.id}
-        className='w-full rounded-2xl border-gray-600 border mb-3'
-        >
-          
-        </div>
-      ))}
-    </div>
-  )
-}
+  const [sortBy, setSortBy] = useState(sortOptions[0]);
+  const { data, isLoading } = useJobs();
 
-export default AllJobs
+  const jobs = data?.jobs ?? [];
+
+  return (
+    <div className="bg-white min-h-screen w-full rounded-2xl p-5">
+      <div className="flex justify-between items-center">
+        <div className="ml-5 mb-4">
+          <h1 className="text-[#1a3c6e] font-bold text-4xl font-heading">
+            All Jobs
+          </h1>
+          <p className="text-sm mt-2 text-gray-700">
+            Showing {data?.pagination?.total ?? 0} open roles
+          </p>
+        </div>
+        <div className="px-4 py-2 border-gray-400 rounded">
+          <Select
+            instanceId="sort-select"
+            options={sortOptions}
+            value={sortBy}
+            onChange={(selected) => setSortBy(selected as any)}
+            isSearchable={false}
+            classNames={{
+              control: () =>
+                "!rounded-xl !border-gray-200 !bg-white !text-sm !min-h-[40px] !cursor-pointer",
+              option: (state) =>
+                `!text-sm !cursor-pointer ${state.isSelected ? "!bg-[#1a3c6e]" : "hover:!bg-blue-50"}`,
+              singleValue: () => "!text-gray-700 !text-sm",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Loading */}
+      {isLoading && (
+        <div className="text-center text-gray-400 py-20">Loading jobs...</div>
+      )}
+
+      {/* Jobs list */}
+      {!isLoading && jobs.length === 0 && (
+        <div className="text-center text-gray-400 py-20">No jobs found</div>
+      )}
+
+      <div>
+        {jobs.map((job: any) => (
+          <div
+            key={job._id}
+            className="w-full flex rounded-2xl border border-gray-200 mb-3 p-4 hover:shadow-md transition"
+          >
+            {/* Logo */}
+            <div className="flex justify-center items-center rounded-xl border p-2 border-gray-200 h-11 w-11 mr-4 shrink-0">
+              <HiOfficeBuilding size={20} color="#1a3c6e" />
+            </div>
+
+            <div className="w-full">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <div className="text-md font-semibold font-heading">
+                    {job.title}
+                  </div>
+                  <span className="text-sm text-gray-400 mr-2">
+                    <HiOfficeBuilding className="inline mr-1" />
+                    {job.employer_id?.name ?? "Company"}
+                  </span>
+                  <span className="text-sm text-gray-400 mr-2">
+                    <MdLocationOn className="inline mr-1" />
+                    {job.location}
+                  </span>
+                  <span className="text-sm text-gray-400 mr-2">
+                    <FaClock className="inline mr-1" />
+                    {new Date(job.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                {job.remote && (
+                  <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
+                    Remote
+                  </span>
+                )}
+              </div>
+
+              <p className="text-sm text-gray-400 mb-3">{job.description}</p>
+
+              <div className="flex justify-between items-center w-full">
+                <div className="flex gap-3 flex-wrap">
+                  <span className="text-xs py-1 px-2 rounded-2xl bg-gray-100">
+                    {job.job_type}
+                  </span>
+                  <span className="text-xs py-1 px-2 rounded-2xl border border-gray-300">
+                    {job.experience_level}
+                  </span>
+                  <span className="text-sm py-1 px-2 text-emerald-500">
+                    ${job.salary_min?.toLocaleString()} - $
+                    {job.salary_max?.toLocaleString()}
+                  </span>
+                </div>
+                <button className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white hover:cursor-pointer hover:bg-blue-950 transition">
+                  Details
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default AllJobs;

@@ -33,3 +33,11 @@ body {
 .font-heading {
   font-family: var(--font-heading);
 }
+
+input[type="checkbox"] {
+  accent-color: #1a3c6e;
+}
+
+input[type="range"] {
+  accent-color: #1a3c6e;
+}

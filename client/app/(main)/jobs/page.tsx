@@ -8,7 +8,7 @@ const page = () => {
       <div className='w-1/3'>
         <FilterJobs/>
       </div>
-      <div className='w-2/3'>
+      <div className='min-w-2/3'>
         <AllJobs/>
       </div>
     </div>
