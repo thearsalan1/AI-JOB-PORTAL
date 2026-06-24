@@ -27,6 +27,9 @@ export const useJobs = (filters?: {
   skills?: string;
   salary_min?: number;
   remote?: boolean;
+  job_type?: string;
+  experience_level?: string;
+  sort?: string;
 }) => {
   return useQuery({
     queryKey: ["jobs", filters],
@@ -37,6 +40,10 @@ export const useJobs = (filters?: {
       if (filters?.salary_min)
         params.append("salary_min", String(filters.salary_min));
       if (filters?.remote) params.append("remote", "true");
+      if (filters?.job_type) params.append("job_type", filters.job_type);
+      if (filters?.sort) params.append("sort", filters.sort);
+      if (filters?.experience_level)
+        params.append("experience_level", filters.experience_level);
       const res = await api.get(`/jobs?${params.toString()}`);
       return res.data;
     },

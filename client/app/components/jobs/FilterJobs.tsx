@@ -4,10 +4,21 @@ import { FaFilter } from "react-icons/fa";
 import DropDown from "@/app/components/jobs/DropDown";
 
 const workModes = ["In-office", "Remote"];
-const jobType = ["Part-time", "Full-time", "Contract"];
-const ExperienceLevel = ["senior", "mid", "junior"];
+const jobType = [
+  { label: "Part-time", value: "part-time" },
+  { label: "Full-time", value: "full-time" },
+  { label: "Contract", value: "contract" },
+];
+const ExperienceLevel = [
+  { label: "Senior", value: "senior" },
+  { label: "Mid", value: "mid" },
+  { label: "Junior", value: "junior" },
+];
+interface FilterJobsProps {
+  onApplyFilters: (filters: any) => void;
+}
 
-const FilterJobs = () => {
+const FilterJobs = ({ onApplyFilters }: FilterJobsProps) => {
   const [selectedWorkMode, setSelectedWorkMode] = useState<string | null>(null);
   const [selectedJobType, setSelectedJobType] = useState<string | null>(null);
   const [selectedExperience, setSelectedExperience] = useState<string | null>(
@@ -15,6 +26,16 @@ const FilterJobs = () => {
   );
   const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
   const [salary, setSalary] = useState(50);
+  const handleApply = () => {
+    const filters = {
+      workMode: selectedWorkMode,
+      jobType: selectedJobType,
+      experience: selectedExperience,
+      skills: selectedSkills,
+      salary: salary,
+    };
+    onApplyFilters(filters); // parent ko data bhejna
+  };
   return (
     <div className="p-2  h-full ">
       <div className="flex justify-between items-center border-b-2 border-gray-300  px-6 py-6 mb-5">
@@ -70,18 +91,20 @@ const FilterJobs = () => {
         <div className="space-y-2 text-sm">
           {jobType.map((type) => (
             <label
-              key={type}
-              className="flex  items-center gap-2 cursor-pointer "
+              key={type.value}
+              className="flex items-center gap-2 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selectedJobType === type}
+                checked={selectedJobType === type.value}
                 onChange={() =>
-                  setSelectedJobType(selectedJobType === type ? null : type)
+                  setSelectedJobType(
+                    selectedJobType === type.value ? null : type.value,
+                  )
                 }
                 className="h-4 w-4 rounded border-gray-300 text-[#1a3c6e] focus:ring-[#1a3c6e]"
               />
-              <span className="text-gray-600">{type}</span>
+              <span className="text-gray-600">{type.label}</span>
             </label>
           ))}
         </div>
@@ -94,18 +117,20 @@ const FilterJobs = () => {
         <div className="text-sm flex gap-7 items-center">
           {ExperienceLevel.map((exp) => (
             <label
-              key={exp}
-              className="flex  items-center gap-2 cursor-pointer "
+              key={exp.value}
+              className="flex items-center gap-2 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selectedExperience === exp}
+                checked={selectedExperience === exp.value}
                 onChange={() =>
-                  setSelectedExperience(selectedExperience === exp ? null : exp)
+                  setSelectedExperience(
+                    selectedExperience === exp.value ? null : exp.value,
+                  )
                 }
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-gray-300 text-[#1a3c6e] focus:ring-[#1a3c6e]"
               />
-              <span className="capitalize text-gray-600">{exp}</span>
+              <span className="text-gray-600">{exp.label}</span>
             </label>
           ))}
         </div>
@@ -127,7 +152,10 @@ const FilterJobs = () => {
           <span className="text-gray-600 font-medium">{salary}k</span>
         </div>
       </div>
-      <button className="w-full bg-[#1a3c6e] rounded-2xl py-2 text-white font font-semibold font-sans mt-5 hover:cursor-pointer hover:bg-blue-950 tracking-wide">
+      <button
+        onClick={handleApply}
+        className="w-full bg-[#1a3c6e] rounded-2xl py-2 text-white font font-semibold font-sans mt-5 hover:cursor-pointer hover:bg-blue-950 tracking-wide"
+      >
         Apply
       </button>
     </div>
