@@ -10,16 +10,16 @@ const DropDown = ({ onSkillsChange }: DropDownPage) => {
   const [selectedSkills, setSelectedSkills] = useState<any[]>([]);
   const { data: skillsData, isLoading } = useSkills();
 
-  // react-select format mein convert karo
   const skillOptions =
     skillsData?.map((skill: any) => ({
       value: skill._id,
       label: skill.name,
+      category: skill.category,
     })) ?? [];
 
   const handleChange = (selected: any) => {
     setSelectedSkills(selected as any[]);
-    onSkillsChange?.(selected as any[]); // ← parent ko bhi bata do
+    onSkillsChange?.(selected as any[]);
   };
 
   return (

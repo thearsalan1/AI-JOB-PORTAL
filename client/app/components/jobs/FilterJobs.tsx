@@ -34,7 +34,7 @@ const FilterJobs = ({ onApplyFilters }: FilterJobsProps) => {
       skills: selectedSkills,
       salary: salary,
     };
-    onApplyFilters(filters); // parent ko data bhejna
+    onApplyFilters(filters);
   };
   return (
     <div className="p-2  h-full ">
