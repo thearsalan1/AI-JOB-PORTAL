@@ -29,7 +29,6 @@ export function proxy(request: NextRequest) {
     try {
       const parsed = JSON.parse(decodeURIComponent(authStorage));
       isAuthenticated = !!parsed?.state?.token;
-      console.log("isAuthenticated:", isAuthenticated);
     } catch {
       isAuthenticated = false;
     }

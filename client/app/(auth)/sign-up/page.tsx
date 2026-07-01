@@ -21,17 +21,14 @@ const Page = () => {
   const [error, setError] = useState("");
   const registerationMutation = useRegister();
   const router = useRouter();
-  const {setAuth} = useAuthStore();
-
+  const { setAuth } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-    toast.error("Passwords do not match");
-    return;
-  }
-  console.log(password," ",confirmPassword);
-  
+      toast.error("Passwords do not match");
+      return;
+    }
 
     try {
       const response = await registerationMutation.mutateAsync({
@@ -43,7 +40,7 @@ const Page = () => {
 
       console.log(response);
       toast.success("Account Created");
-      setAuth(response.user,response.token)
+      setAuth(response.user, response.token);
       router.push("/dashboard");
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Registration Failed");

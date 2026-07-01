@@ -21,7 +21,6 @@ const Page = () => {
       const response = await forgotPassword.mutateAsync({
         email
       })
-      console.log(response);
       if (response?.message === "OTP sent successfully") {
       toast.success(response.message);
       setTimeout(() => router.push(`/reset-password?email=${encodeURIComponent(email)}`), 1500);

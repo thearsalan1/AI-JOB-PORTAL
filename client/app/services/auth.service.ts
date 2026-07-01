@@ -1,10 +1,8 @@
 import api from "../lib/axios";
 
 export const loginUser = async (data: { email: string; password: string }) => {
-  console.log("login hit");
 
   const user = await api.post("/auth/login", data);
-  console.log("log reach");
 
   return user;
 };
