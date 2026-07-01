@@ -7,7 +7,6 @@ const page = () => {
   const [filters, setFilters] = useState<any>(null);
   const handleFilters = (filters: any) => {
     setFilters(filters);
-    console.log(filters.experience);
   };
   return (
     <div className=" flex min-w-full min-h-screen">
@@ -15,7 +14,7 @@ const page = () => {
         <FilterJobs onApplyFilters={handleFilters} />
       </div>
       <div className="min-w-2/3">
-        <AllJobs filters={filters}/>
+        <AllJobs filters={filters} />
       </div>
     </div>
   );

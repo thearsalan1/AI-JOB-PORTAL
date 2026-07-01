@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -12,47 +12,37 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/app/store/authStore";
 
-
 const Page = () => {
   const loginMutation = useLogin();
-  const [email, setEmail]= useState("");
-  const [password,setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
-  const {setAuth} = useAuthStore()
+  const { setAuth } = useAuthStore();
 
-  const handleSubmit =async (e:React.FormEvent)=>{
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const data =await loginMutation.mutateAsync({
+      const data = await loginMutation.mutateAsync({
         email,
-        password
-      })
-      toast.success("Login successfully")
-      setAuth(data.data.user,data.data.token)
-      router.push('/dashboard')
-      
-    } catch (error:any) {
-      console.log("Login Error:", error);
-
-    toast.error(
-      error?.response?.data?.message ||
-      "Something went wrong"
-    );
+        password,
+      });
+      toast.success("Login successfully");
+      setAuth(data.data.user, data.data.token);
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
-  }
+  };
   return (
     <div className="flex flex-col lg:flex-row w-full min-h-screen">
-
       {/* LEFT SECTION */}
       <section className="relative overflow-hidden w-full lg:w-1/2 py-10 px-6 sm:px-10 bg-[#1a3c6e] text-white flex flex-col justify-between">
-        <SingInDesign/>
+        <SingInDesign />
       </section>
 
       {/* RIGHT SECTION */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-gray-100 py-10 px-4">
-
         <div className="w-full max-w-md bg-white rounded-2xl p-6 sm:p-10 shadow-lg">
-          
           <h1 className="font-heading font-extrabold text-2xl sm:text-3xl mb-2">
             Welcome back
           </h1>
@@ -65,34 +55,46 @@ const Page = () => {
             {/* Email */}
             <label className="font-semibold text-sm">Email address</label>
             <div className="relative w-full mb-4">
-              <CiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <CiMail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
               <input
                 type="email"
                 placeholder="name@company.com"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             {/* Password */}
             <div className="flex justify-between items-center">
               <label className="font-semibold text-sm">Password</label>
-              <Link href={"/forget-password"} className="text-sm text-[#00a897]">
+              <Link
+                href={"/forget-password"}
+                className="text-sm text-[#00a897]"
+              >
                 Forgot?
               </Link>
             </div>
 
             <div className="relative w-full mb-6">
-              <IoLockClosedOutline className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <IoLockClosedOutline
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
               <input
                 type="password"
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
-              <FaEye className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+              <FaEye
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                size={18}
+              />
             </div>
 
             {/* Remember */}

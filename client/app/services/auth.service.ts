@@ -1,7 +1,6 @@
 import api from "../lib/axios";
 
 export const loginUser = async (data: { email: string; password: string }) => {
-
   const user = await api.post("/auth/login", data);
 
   return user;
@@ -15,10 +14,8 @@ export const registerUser = async (data: {
 }) => {
   try {
     const response = await api.post("/auth/register", data);
-    console.log("Register response:", response.data);
     return response.data;
   } catch (error: any) {
-    console.log("Register error details:", error?.response?.data); // ← ye add karo
     throw error;
   }
 };

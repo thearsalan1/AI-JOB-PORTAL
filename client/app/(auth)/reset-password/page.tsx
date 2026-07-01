@@ -37,7 +37,6 @@ const Page = () => {
         otp,
         newPassword,
       });
-      console.log(res);
       if (res.data.message === "Password reset successful") {
         toast.success("Password change successfully try to login");
         router.push("/sign-in");

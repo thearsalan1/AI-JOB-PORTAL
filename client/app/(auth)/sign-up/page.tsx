@@ -38,7 +38,6 @@ const Page = () => {
         role,
       });
 
-      console.log(response);
       toast.success("Account Created");
       setAuth(response.user, response.token);
       router.push("/dashboard");
