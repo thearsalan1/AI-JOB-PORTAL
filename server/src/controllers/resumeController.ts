@@ -129,11 +129,12 @@ export const parseResume = async (req: AuthRequest, res: Response) => {
       data: parsedData,
     });
 
-    // ✅ Temporarily expose full error for debugging
   } catch (error) {
+    console.error("parseResume error:", error); 
     const err = error as Error;
     return res.status(500).json({
       error: "Parsing failed",
+      details: err.message, 
     });
   }
 };

@@ -1,6 +1,7 @@
 "use client";
 
-import { useGetUserSkills } from "@/app/hooks/skill/useSkill";
+import { useGetUserSkills, useRemoveSkill } from "@/app/hooks/skill/useSkill";
+import { MdDelete } from "react-icons/md";
 
 interface UserSkill {
   _id: string;
@@ -14,12 +15,16 @@ interface UserSkill {
   years_experience: number;
 }
 
-const UserSkills = () => {
+interface UserSkillsProps {
+  showDelete?: boolean;
+}
+
+const UserSkills = ({ showDelete = false }: UserSkillsProps) => {
   const { data = [], isLoading } = useGetUserSkills() as {
     data: UserSkill[];
     isLoading: boolean;
   };
-
+  const removeSkill = useRemoveSkill();
   if (isLoading) {
     return <p className="text-gray-500">Loading...</p>;
   }
@@ -29,12 +34,22 @@ const UserSkills = () => {
       {data.map((skill) => (
         <div
           key={skill._id}
-          className="rounded-xl bg-[#1a3c6e] text-white px-4 py-2"
+          className="relative rounded-xl bg-[#1a3c6e] text-white px-4 py-2"
         >
           <p className="font-semibold">{skill.skill_id.name}</p>
           <p className="text-xs">
             Level: {skill.level} • {skill.years_experience} years
           </p>
+
+          {showDelete && (
+            <button
+              onClick={() => removeSkill.mutate(skill._id)}
+              disabled={removeSkill.isPending}
+              className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow"
+            >
+              <MdDelete size={14} className="text-red-500" />
+            </button>
+          )}
         </div>
       ))}
     </div>

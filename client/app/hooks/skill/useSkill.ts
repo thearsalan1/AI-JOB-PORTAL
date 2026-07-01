@@ -52,6 +52,10 @@ export const useAddSkills = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seeker-skills"] });
     },
-    onError: () => toast.error("Skills update failed"),
+    onError: (error: any) => {
+      if (error?.response?.status !== 409) {
+        toast.error("Skill add failed");
+      }
+    },
   });
 };

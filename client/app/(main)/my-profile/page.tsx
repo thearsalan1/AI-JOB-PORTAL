@@ -13,11 +13,15 @@ import { BsPerson } from "react-icons/bs";
 import UserSkills from "@/app/components/skills/UserSkills";
 import DropDown from "@/app/components/jobs/DropDown";
 import { useAddSkills } from "@/app/hooks/skill/useSkill";
+import toast from "react-hot-toast";
+import ResumeManager from "@/app/components/resume/ResumeManager";
 
 type SelectedSkill = {
   value: string;
   label: string;
   category: string;
+  level: number;
+  years_experience: number;
 };
 
 const Page = () => {
@@ -59,13 +63,14 @@ const Page = () => {
       await createProfile.mutateAsync(form);
     }
 
-    // Skills save karo — dono cases mein (create & update)
     for (const skill of form.skills) {
-      await addSkills.mutateAsync({
-        skill_id: skill.value,
-        level: 1,
-        years_experience: 0,
-      });
+      try {
+        await addSkills.mutateAsync({
+          skill_id: skill.value,
+          level: skill.level,
+          years_experience: skill.years_experience,
+        });
+      } catch (err: any) {}
     }
 
     setIsEditing(false);
@@ -92,6 +97,32 @@ const Page = () => {
     return <div className="text-center text-gray-400 py-20">Loading...</div>;
   }
 
+  const handleApplyAIData = (data: {
+    current_role?: string;
+    experience_years?: number;
+    skills: SelectedSkill[];
+  }) => {
+    setForm((prev) => {
+      const mergedSkills = [...prev.skills];
+      data.skills.forEach((newSkill) => {
+        const alreadyExists = mergedSkills.some(
+          (s) => s.value === newSkill.value,
+        );
+        if (!alreadyExists) {
+          mergedSkills.push(newSkill);
+        }
+      });
+
+      return {
+        ...prev,
+        current_role: data.current_role || prev.current_role,
+        experience_years: data.experience_years ?? prev.experience_years,
+        skills: mergedSkills,
+      };
+    });
+
+    setIsEditing(true);
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-4xl mx-auto">
       {/* Header */}
@@ -278,6 +309,14 @@ const Page = () => {
             </div>
           </div>
 
+          {/* Resume */}
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+              <FiBriefcase size={18} color="#1a3c6e" /> Resume
+            </h2>
+            <ResumeManager onApplyToProfile={handleApplyAIData} />
+          </div>
+
           {/* Education */}
           <div className="bg-white rounded-2xl p-6 shadow-sm">
             <div className="flex justify-between items-center mb-4">
@@ -351,23 +390,79 @@ const Page = () => {
               <FiBriefcase size={18} color="#1a3c6e" /> Skills
             </h2>
 
-            {isEditing ? (
-              <div>
-                <p className="text-sm text-gray-400 mb-3">
-                  Select skills to add to your profile
-                </p>
+            {/* Existing skills — edit mode mein delete button bhi dikhe */}
+            <UserSkills showDelete={isEditing} />
+
+            {/* Sirf edit mode mein add karne ka dropdown */}
+            {isEditing && (
+              <div className="mt-4">
+                <p className="text-sm text-gray-400 mb-2">Add more skills</p>
                 <DropDown
                   onSkillsChange={(skills) =>
-                    setForm((prev) => ({ ...prev, skills }))
+                    setForm((prev) => ({
+                      ...prev,
+                      skills: skills.map((s) => {
+                        const existing = prev.skills.find(
+                          (p) => p.value === s.value,
+                        );
+                        return {
+                          ...s,
+                          level: existing?.level ?? 1,
+                          years_experience: existing?.years_experience ?? 0,
+                        };
+                      }),
+                    }))
                   }
                 />
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm text-gray-400 mb-3">
-                  Your current skills
-                </p>
-                <UserSkills />
+
+                {form.skills.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {form.skills.map((skill, index) => (
+                      <div
+                        key={skill.value}
+                        className="flex items-center gap-3 border border-gray-200 rounded-xl px-3 py-2"
+                      >
+                        <span className="flex-1 text-sm font-medium text-gray-700">
+                          {skill.label}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <label className="text-xs text-gray-400">Level</label>
+                          <select
+                            value={skill.level}
+                            onChange={(e) => {
+                              const updated = [...form.skills];
+                              updated[index].level = Number(e.target.value);
+                              setForm({ ...form, skills: updated });
+                            }}
+                            className="border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                          >
+                            {[1, 2, 3, 4, 5].map((lvl) => (
+                              <option key={lvl} value={lvl}>
+                                {lvl}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <label className="text-xs text-gray-400">Years</label>
+                          <input
+                            type="number"
+                            min={0}
+                            value={skill.years_experience}
+                            onChange={(e) => {
+                              const updated = [...form.skills];
+                              updated[index].years_experience = Number(
+                                e.target.value,
+                              );
+                              setForm({ ...form, skills: updated });
+                            }}
+                            className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

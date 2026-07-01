@@ -10,11 +10,15 @@ import { BsBriefcase } from "react-icons/bs";
 import api from "@/app/lib/axios";
 import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 import useApplyJob from "@/app/hooks/jobs/useApplyJobs";
+import { useState } from "react";
+import { useGetResumes } from "@/app/hooks/resume/useResume";
 
 const JobDetailPage = () => {
   const { id } = useParams();
   const router = useRouter();
   const { user } = useAuthStore();
+  const { data: resumes = [] } = useGetResumes();
+  const [selectedResumeId, setSelectedResumeId] = useState("");
 
   // ← hooks use karo
   const { saved, saveMutation } = useSaveJob(id as string);
@@ -141,13 +145,34 @@ const JobDetailPage = () => {
             <p className="text-sm text-gray-400 mb-6">Annual Salary</p>
 
             {user?.role === "seeker" && (
-              <button
-                onClick={() => applyMutation.mutate(id as string)}
-                disabled={applyMutation.isPending}
-                className="w-full bg-[#1a3c6e] text-white py-3 rounded-xl font-semibold mb-3 hover:bg-blue-950 transition disabled:opacity-50"
-              >
-                {applyMutation.isPending ? "Applying..." : "Apply Now"}
-              </button>
+              <>
+                {resumes.length > 0 && (
+                  <select
+                    value={selectedResumeId}
+                    onChange={(e) => setSelectedResumeId(e.target.value)}
+                    className="w-full mb-3 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                  >
+                    <option value="">Select resume (optional)</option>
+                    {resumes.map((r: any) => (
+                      <option key={r._id} value={r._id}>
+                        {r.file_name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <button
+                  onClick={() =>
+                    applyMutation.mutate({
+                      jobId: id as string,
+                      resumeId: selectedResumeId || undefined,
+                    })
+                  }
+                  disabled={applyMutation.isPending}
+                  className="w-full bg-[#1a3c6e] text-white py-3 rounded-xl font-semibold mb-3 hover:bg-blue-950 transition disabled:opacity-50"
+                >
+                  {applyMutation.isPending ? "Applying..." : "Apply Now"}
+                </button>
+              </>
             )}
 
             <button
