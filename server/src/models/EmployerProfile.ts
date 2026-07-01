@@ -8,7 +8,7 @@ const EmployerSchema:Schema = new Schema<IEmployerProfile>({
     required:true,
     unique:true,
   },
-  company_nmae:{
+  company_name:{
     type:String,
     required:true,
   },
@@ -20,7 +20,7 @@ const EmployerSchema:Schema = new Schema<IEmployerProfile>({
     type:Number,
     required:true
   },
-  verfied:{
+  verified:{
     type:Boolean,
     default:false,
   },

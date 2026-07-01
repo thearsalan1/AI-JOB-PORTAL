@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { Request } from 'express';
+import { Request } from "express";
 
 export interface JwtPayload {
   userId: string;
@@ -14,69 +14,65 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: 'seeker' | 'employer' | 'admin';
+  role: "seeker" | "employer" | "admin";
   phone?: string;
   location?: string;
   isVerified: boolean;
   createdAt: Date;
-  otp?: string;   
-  otpExpiry?: number;    
+  otp?: string;
+  otpExpiry?: number;
 }
 
-export interface IjobSeekerProfile extends Document{
-  user_id:mongoose.Types.ObjectId;
-  experience_years:number;
-  education:{degree:string;year:number}[];
+export interface IjobSeekerProfile extends Document {
+  user_id: mongoose.Types.ObjectId;
+  experience_years: number;
+  education: { degree: string; year: number }[];
   current_role: string;
-  preferred_salary:number;
-  preferred_location:string;
-  bio?:string;
+  preferred_salary: number;
+  preferred_location: string;
+  bio?: string;
 }
 
-
-export interface IEmployerProfile extends Document{
-  user_id:mongoose.Types.ObjectId;
-  company_nmae:string;
-  industry:string;
-  company_size:number;
-  verfied:boolean;
-  description?:string;
-  website?:string;
+export interface IEmployerProfile extends Document {
+  user_id: mongoose.Types.ObjectId;
+  company_name: string;
+  industry: string;
+  company_size: number;
+  verified: boolean;
+  description?: string;
+  website?: string;
 }
 
-
-export interface ISkill extends Document{
-  name:string;
-  category:string;
+export interface ISkill extends Document {
+  name: string;
+  category: string;
 }
 
-
-export interface IUserSkill extends Document{
-  userId:mongoose.Types.ObjectId;
-  skill_id:mongoose.Types.ObjectId;
-  level:1|2|3|4|5;
-  years_experience?:number;
+export interface IUserSkill extends Document {
+  userId: mongoose.Types.ObjectId;
+  skill_id: mongoose.Types.ObjectId;
+  level: 1 | 2 | 3 | 4 | 5;
+  years_experience?: number;
 }
 
-
-export interface IJobSkill extends Document{
-  job_id:mongoose.Types.ObjectId;
-  skill_id:mongoose.Types.ObjectId;
-  required_level:1|2|3|4|5;
+export interface IJobSkill extends Document {
+  job_id: mongoose.Types.ObjectId;
+  skill_id: mongoose.Types.ObjectId;
+  required_level: 1 | 2 | 3 | 4 | 5;
 }
 
-export interface IResume extends Document{
-  user_id:mongoose.Types.ObjectId;
-  file_url:string;
-  file_name:string,
-  file_size:number,
-  mime_type:string,
-  uploadAt:Date;
-  is_shared: boolean;  
+export interface IResume extends Document {
+  user_id: mongoose.Types.ObjectId;
+  file_url: string;
+  file_name: string;
+  file_size: number;
+  mime_type: string;
+  uploadAt: Date;
+  is_shared: boolean;
 }
 
-export interface IResumeParsedData extends Document{
-  resume_id:mongoose.Types.ObjectId;
+export interface IResumeParsedData extends Document {
+  resume_id: mongoose.Types.ObjectId;
   extracted_name: string;
   extracted_email: string;
   phone?: string;
@@ -88,30 +84,29 @@ export interface IResumeParsedData extends Document{
   confidence_score?: number;
 }
 
-export interface IJob extends Document{
-  employer_id:mongoose.Types.ObjectId;
-  title:string,
-  description:string;
-  salary_min:number;
-  salary_max?:number;
-  location:string;
-  remote:boolean;
-  skills:mongoose.Types.ObjectId[];
-  status:'open' | 'closed';
-  applications_count:number;
-  views:number;
+export interface IJob extends Document {
+  employer_id: mongoose.Types.ObjectId;
+  title: string;
+  description: string;
+  salary_min: number;
+  salary_max?: number;
+  location: string;
+  remote: boolean;
+  skills: mongoose.Types.ObjectId[];
+  status: "open" | "closed";
+  applications_count: number;
+  views: number;
 }
 
 export interface IApplication extends Document {
-  seeker_id:mongoose.Types.ObjectId;
-  job_id:mongoose.Types.ObjectId;
-  resume_id?:mongoose.Types.ObjectId;
-  status:'applied' | 'shortlisted' | 'rejected' | 'hired';
-  appliedAt:Date;
-  updatedAt:Date;
-  notes?:string;
+  seeker_id: mongoose.Types.ObjectId;
+  job_id: mongoose.Types.ObjectId;
+  resume_id?: mongoose.Types.ObjectId;
+  status: "applied" | "shortlisted" | "rejected" | "hired";
+  appliedAt: Date;
+  updatedAt: Date;
+  notes?: string;
 }
-
 
 export interface IJobMatch extends Document {
   seeker_id: mongoose.Types.ObjectId;
@@ -123,20 +118,18 @@ export interface IJobMatch extends Document {
   updatedAt: Date;
 }
 
-
 export interface IDashboardStats extends Document {
   total_users: number;
   total_jobs: number;
   total_applications: number;
-  total_matches:number;
+  total_matches: number;
   avg_match_score: number;
   updatedAt: Date;
 }
 
-
 export interface IUserActivity extends Document {
   user_id: mongoose.Types.ObjectId;
-  action: 'view_job' | 'save_job' | 'apply_job';
+  action: "view_job" | "save_job" | "apply_job";
   job_id?: mongoose.Types.ObjectId;
   createdAt: Date;
   read: boolean;
@@ -144,8 +137,8 @@ export interface IUserActivity extends Document {
 
 export interface ISavedJobs extends Document {
   user_id: mongoose.Types.ObjectId;
-  job_id:mongoose.Types.ObjectId;
-  createdAt:Date;
+  job_id: mongoose.Types.ObjectId;
+  createdAt: Date;
 }
 
 export interface ParsedResume {

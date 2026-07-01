@@ -201,14 +201,14 @@ export const updateApplicationStatus = async (
     const seeker = updated!.seeker_id as any;
     const employerProfile = await EmployerProfile.findOne({
       user_id: application.job_id.employer_id,
-    }).select("company_nmae");
+    }).select("company_name");
 
     await sendApplicationStatusNotification({
       status,
       seekerEmail: seeker.email,
       seekerName:  seeker.name,
       jobTitle:    application.job_id.title,
-      companyName: employerProfile?.company_nmae ?? "Company",  // schema ka exact typo use kiya
+      companyName: employerProfile?.company_name ?? "Company",  // schema ka exact typo use kiya
       notes,
     });
     return res.json(updated);
