@@ -40,7 +40,6 @@ export const createJob = async (req: AuthRequest, res: Response) => {
         return jobSkill.save({ session });
       }),
     );
-    console.log(skills);
 
     await session.commitTransaction();
     res.status(201).json(job);
@@ -199,8 +198,6 @@ export const closeJob = async (req: AuthRequest, res: Response) => {
 
 export const getSavedJobs = async (req: AuthRequest, res: Response) => {
   try {
-    console.log("Req come");
-
     if (req.user!.role !== "seeker") {
       return res
         .status(403)

@@ -1,36 +1,35 @@
-import { Request,Response } from "express"
+import { Request, Response } from "express";
 import { Skill } from "../models/Skill";
 import { AuthRequest } from "../types/types";
 import { UserSkill } from "../models/UserSkill";
 
-export const getAllSkills = async (req:Request,res:Response)=>{
+export const getAllSkills = async (req: Request, res: Response) => {
   try {
-    const page = Math.max(1,Number(req.query.page)|| 1);
-    const limit = Math.min(100,Number(req.query.limit)|| 10);
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Number(req.query.limit) || 10);
 
-    const [skills,total] = await Promise.all([
-      Skill.find().
-      limit(limit)
-      .skip((page-1)*limit)
-      .sort({createdAt:-1}),
-      Skill.countDocuments()
+    const [skills, total] = await Promise.all([
+      Skill.find()
+        .limit(limit)
+        .skip((page - 1) * limit)
+        .sort({ createdAt: -1 }),
+      Skill.countDocuments(),
     ]);
 
     res.status(200).json({
-      success:true,
+      success: true,
       skills,
-      pagination:{
+      pagination: {
         page,
         limit,
         total,
-        totalPages:Math.ceil(total/limit)
-      }
-    })
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
-}
-
+};
 
 export const getSkillsByCategory = async (req: Request, res: Response) => {
   try {
@@ -39,7 +38,6 @@ export const getSkillsByCategory = async (req: Request, res: Response) => {
     const category = req.params.category;
 
     const filter = { category };
-    
 
     const total = await Skill.countDocuments(filter);
     const skills = await Skill.find(filter)
@@ -60,7 +58,7 @@ export const getSkillsByCategory = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: error.message || "Server error" });
   }
 };
 
@@ -68,12 +66,12 @@ export const searchSkills = async (req: Request, res: Response) => {
   try {
     const { q } = req.query;
 
-    if (!q || typeof q !== 'string') {
+    if (!q || typeof q !== "string") {
       return res.status(400).json({ error: 'Query parameter "q" is required' });
     }
 
     const skills = await Skill.find({
-      name: { $regex: q, $options: 'i' }
+      name: { $regex: q, $options: "i" },
     })
       .limit(10)
       .lean();
@@ -85,7 +83,7 @@ export const searchSkills = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error(error);
-    res.status(500).json({ error: error.message || 'Server error' });
+    res.status(500).json({ error: error.message || "Server error" });
   }
 };
 
@@ -98,16 +96,16 @@ export const getUserSkills = async (req: AuthRequest, res: Response) => {
         error: "User not found",
       });
     }
-    
 
-    const userSkills = await UserSkill.find({userId })
+    const userSkills = await UserSkill.find({ userId })
       .populate("skill_id", "name category")
       .lean();
 
     if (!userSkills || userSkills.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: "User skills not found",
+      return res.status(200).json({
+        success: true,
+        userSkills: [],
+        count: 0,
       });
     }
 
@@ -178,10 +176,9 @@ export const removeUserSkill = async (req: AuthRequest, res: Response) => {
     }
 
     const deletedSkill = await UserSkill.findOneAndDelete({
-      userId,        
-      _id: skillId, 
+      userId,
+      _id: skillId,
     });
-    
 
     if (!deletedSkill) {
       return res.status(404).json({

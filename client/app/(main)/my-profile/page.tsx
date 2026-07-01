@@ -55,16 +55,19 @@ const Page = () => {
   const handleSave = async () => {
     if (profile) {
       await updateProfile.mutateAsync(form);
-      for (const skill of form.skills) {
-        await addSkills.mutateAsync({
-          skill_id: skill.value,
-          level: 1,
-          years_experience: 0,
-        });
-      }
     } else {
       await createProfile.mutateAsync(form);
     }
+
+    // Skills save karo — dono cases mein (create & update)
+    for (const skill of form.skills) {
+      await addSkills.mutateAsync({
+        skill_id: skill.value,
+        level: 1,
+        years_experience: 0,
+      });
+    }
+
     setIsEditing(false);
   };
 
@@ -347,26 +350,26 @@ const Page = () => {
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <FiBriefcase size={18} color="#1a3c6e" /> Skills
             </h2>
-            <span className="text-sm text-gray-400 ">
-              Manage your skills from the{" "}
-              <span className="text-[#1a3c6e] font-semibold mb-2">
-                Skills section
-              </span>{" "}
-              {isEditing ? (
-                <>
-                  <DropDown
-                    onSkillsChange={(skills) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        skills,
-                      }))
-                    }
-                  />
-                </>
-              ) : (
-                <UserSkills></UserSkills>
-              )}
-            </span>
+
+            {isEditing ? (
+              <div>
+                <p className="text-sm text-gray-400 mb-3">
+                  Select skills to add to your profile
+                </p>
+                <DropDown
+                  onSkillsChange={(skills) =>
+                    setForm((prev) => ({ ...prev, skills }))
+                  }
+                />
+              </div>
+            ) : (
+              <div>
+                <p className="text-sm text-gray-400 mb-3">
+                  Your current skills
+                </p>
+                <UserSkills />
+              </div>
+            )}
           </div>
         </div>
       )}

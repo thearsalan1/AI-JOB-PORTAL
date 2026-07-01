@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 interface AddUserSkillPayload {
   skill_id: string;
-  level: string;
+  level: number;
   years_experience: number;
 }
 export const useGetSkills = () => {
@@ -24,6 +24,21 @@ export const useGetUserSkills = () => {
       const res = await api.get("/skills/user");
       return res.data.userSkills;
     },
+  });
+};
+
+export const useRemoveSkill = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (skillId: string) => {
+      const res = await api.delete(`/skills/user/${skillId}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["seeker-skills"] });
+      toast.success("Skill removed");
+    },
+    onError: () => toast.error("Failed to remove skill"),
   });
 };
 
