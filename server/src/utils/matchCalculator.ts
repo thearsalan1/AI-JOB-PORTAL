@@ -1,6 +1,7 @@
 import { Job } from "../models/Job";
 import { JobSkill } from "../models/JobSkill";
 import { UserSkill } from "../models/UserSkill";
+import { jobSeekerProfile } from "../models/JobSeekerProfile";
 
 interface SkillVector {
   [skillId: string]: number;
@@ -48,9 +49,21 @@ export const calculateMatchScore = async (userId: string, jobId: string): Promis
 
     const baseScore = (overlapScore / totalRequired) * 100;
 
-    // Location + other boosters
     const job = await Job.findById(jobId);
-    const locationBoost = job?.location.includes('Lucknow') ? 8 : 2;
+    const seekerProfile = await jobSeekerProfile.findOne({ user_id: userId });
+
+    let locationBoost = 2; 
+    if (job?.remote) {
+      locationBoost = 8; 
+    } else if (
+      seekerProfile?.preferred_location &&
+      job?.location
+        .toLowerCase()
+        .includes(seekerProfile.preferred_location.toLowerCase())
+    ) {
+      locationBoost = 8;
+    }
+
     const finalScore = Math.min(100, baseScore + locationBoost);
 
     const skill_matches = jobSkills.map((js: any) => ({

@@ -12,7 +12,6 @@ import {
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, role, password } = req.body;
-    console.log("Register body:", req.body);
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res
@@ -39,7 +38,6 @@ export const register = async (req: Request, res: Response) => {
         "Welcome to Our Job Portal",
         welcomeEmailTemplate(name),
       );
-      console.log("Welcome email sent successfully");
     } catch (emailError) {
       console.error("Failed to send welcome email:", emailError);
     }
