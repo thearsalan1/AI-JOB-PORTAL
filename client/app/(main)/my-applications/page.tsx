@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { HiOfficeBuilding } from "react-icons/hi";
 import { FiBriefcase } from "react-icons/fi";
-import useGetApplications from "@/app/hooks/applications/useGetApplications";
+import {
+  useGetApplications,
+  useRemoveApplication,
+} from "@/app/hooks/applications/useApplications";
 
 const statusColors: Record<string, string> = {
   applied: "bg-blue-100 text-blue-600",
@@ -19,10 +22,21 @@ const Page = () => {
   const [activeTab, setActiveTab] = useState("All");
 
   const { data, isLoading } = useGetApplications(
-    activeTab === "All" ? undefined : activeTab
+    activeTab === "All" ? undefined : activeTab,
   );
 
-  const applications = data?.applications ?? [];
+  const { mutateAsync: removeApplication } = useRemoveApplication();
+
+  const handleOnDeleteApplication = async (id: string) => {
+    try {
+      await removeApplication(id);
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+    const applications = data?.applications ?? [];
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6">
@@ -39,12 +53,18 @@ const Page = () => {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {["applied", "shortlisted", "hired", "rejected"].map((s) => (
-          <div key={s} className="bg-white rounded-2xl p-4 shadow-sm text-center">
-            <p className={`text-xs font-semibold capitalize px-2 py-1 rounded-full inline-block mb-2 ${statusColors[s]}`}>
+          <div
+            key={s}
+            className="bg-white rounded-2xl p-4 shadow-sm text-center"
+          >
+            <p
+              className={`text-xs font-semibold capitalize px-2 py-1 rounded-full inline-block mb-2 ${statusColors[s]}`}
+            >
               {s}
             </p>
             <h2 className="text-2xl font-bold text-gray-800">
-              {data?.applications?.filter((a: any) => a.status === s).length ?? 0}
+              {data?.applications?.filter((a: any) => a.status === s).length ??
+                0}
             </h2>
           </div>
         ))}
@@ -103,18 +123,26 @@ const Page = () => {
               </div>
 
               {/* Status badge */}
-              <span className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${statusColors[app.status]}`}>
+              <span
+                className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${statusColors[app.status]}`}
+              >
                 {app.status}
               </span>
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-4 gap-2">
               <button
                 onClick={() => router.push(`/jobs/${app.job_id?._id}`)}
                 className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition"
               >
                 View Job
+              </button>
+              <button
+                onClick={() => handleOnDeleteApplication(app._id)}
+                className="px-4 py-1 rounded-2xl bg-red-500 text-white text-sm hover:bg-red-600 transition"
+              >
+                Remove Application
               </button>
             </div>
           </div>

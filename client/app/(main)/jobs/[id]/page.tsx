@@ -8,10 +8,10 @@ import { HiOfficeBuilding } from "react-icons/hi";
 import { MdLocationOn, MdWork, MdAttachMoney } from "react-icons/md";
 import { BsBriefcase } from "react-icons/bs";
 import api from "@/app/lib/axios";
-import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 import useApplyJob from "@/app/hooks/jobs/useApplyJobs";
 import { useState } from "react";
 import { useGetResumes } from "@/app/hooks/resume/useResume";
+import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 
 const JobDetailPage = () => {
   const { id } = useParams();
@@ -20,7 +20,6 @@ const JobDetailPage = () => {
   const { data: resumes = [] } = useGetResumes();
   const [selectedResumeId, setSelectedResumeId] = useState("");
 
-  // ← hooks use karo
   const { saved, saveMutation } = useSaveJob(id as string);
   const applyMutation = useApplyJob();
 

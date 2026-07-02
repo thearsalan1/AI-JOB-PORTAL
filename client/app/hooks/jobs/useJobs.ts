@@ -1,6 +1,19 @@
 import api from "@/app/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
+interface JobSearch {
+  page?:1,
+  limit?: 10,
+  location?: string;
+  skills?: string;
+  salary_min?: number;
+  remote?: boolean;
+  job_type?: string;
+  experience_level?: string;
+  sort?: string;
+  search?: string;
+}
+
 export const useSkills = () => {
   return useQuery({
     queryKey: ["skills"],
@@ -22,15 +35,7 @@ export const useSearchSkills = (query: string) => {
   });
 };
 
-export const useJobs = (filters?: {
-  location?: string;
-  skills?: string;
-  salary_min?: number;
-  remote?: boolean;
-  job_type?: string;
-  experience_level?: string;
-  sort?: string;
-}) => {
+export const useJobs = (filters?: JobSearch) => {
   return useQuery({
     queryKey: ["jobs", filters],
     queryFn: async () => {

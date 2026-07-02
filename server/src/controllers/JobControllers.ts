@@ -69,6 +69,7 @@ export const getJobs = async (req: Request, res: Response) => {
       job_type,
       experience_level,
       sort,
+      search,
     } = req.query;
 
     // sort logic:
@@ -78,6 +79,13 @@ export const getJobs = async (req: Request, res: Response) => {
     if (sort === "salary_high") sortQuery = { salary_max: -1 };
     if (sort === "salary_low") sortQuery = { salary_min: 1 };
     const query: any = { status };
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { company_name: { $regex: search, $options: "i" } },
+      ];
+    }
 
     if (skills) query.skills = { $in: (skills as string).split(",") };
     if (location) query.location = { $regex: location, $options: "i" };

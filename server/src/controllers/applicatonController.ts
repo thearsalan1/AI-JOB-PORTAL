@@ -255,3 +255,38 @@ export const getApplicationResume = async (
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+// DELETE /applications/:id
+export const deleteApplication = async (req: AuthRequest, res: Response) => {
+  try {
+    const application = await Application.findById(req.params.id);
+
+    if (!application) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+
+    // Ownership check: sirf apni hi application withdraw kar sake
+    if (application.seeker_id.toString() !== req.user!.userId) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // Business rule: final decision ke baad withdraw allow nahi
+    if (["hired", "rejected"].includes(application.status)) {
+      return res.status(400).json({
+        error: `Cannot withdraw an application that is already ${application.status}`,
+      });
+    }
+
+    await Application.findByIdAndDelete(req.params.id);
+
+    // Symmetry: jab apply kiya tha count ++ hua tha, ab -- karo
+    await Job.findByIdAndUpdate(application.job_id, {
+      $inc: { applications_count: -1 },
+    });
+
+    return res.status(200).json({ message: "Application withdrawn" });
+  } catch (error) {
+    console.error("deleteApplication error:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};

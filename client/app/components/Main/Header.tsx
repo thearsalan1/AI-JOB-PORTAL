@@ -1,16 +1,22 @@
+'use client'
+import { useJobs } from "@/app/hooks/jobs/useJobs";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { FaBell, FaSearch } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
 
 const Header = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data, isLoading } = useJobs({
+    page: 1,
+    limit: 10,
+    search: searchTerm,
+  });
   return (
     <header className="w-full bg-white px-4 sm:px-6 lg:px-10 py-3 font-heading">
       <div className="flex items-center justify-between gap-4">
-
         {/* Left */}
         <div className="flex items-center gap-3">
-
           {/* Logo */}
           <div className="p-2 rounded-lg bg-[#1a3c6e]">
             <FiBriefcase size={16} className="text-white" />
@@ -27,14 +33,13 @@ const Header = () => {
               type="text"
               placeholder="Search jobs, companies..."
               className="bg-transparent outline-none text-sm w-full"
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-
         </div>
 
         {/* Right */}
         <div className="flex items-center gap-4">
-
           {/* Search icon (mobile only) */}
           <FaSearch className="text-gray-500 md:hidden" />
 
@@ -50,9 +55,7 @@ const Header = () => {
               className="object-cover"
             />
           </div>
-
         </div>
-
       </div>
     </header>
   );
