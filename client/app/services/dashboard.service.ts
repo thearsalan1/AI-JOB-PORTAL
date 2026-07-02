@@ -1,15 +1,19 @@
 import api from "../lib/axios";
 
 export const getDashboardStats = async () => {
-  const [applications, savedJobs, recommendations] = await Promise.all([
-    api.get("/applications"),
-    api.get("/jobs/saved"),
-    api.get("/matches/recommendations"),
-  ]);
+  const [stats, recommendations, recentActivity, savedJobs] = await Promise.all(
+    [
+      api.get("/admin/seeker"),
+      api.get("/matches/recommendations"),
+      api.get("/admin/activity/recent"),
+      api.get("/jobs/saved"),
+    ],
+  );
 
   return {
-    applications: applications.data,
-    savedJobs: savedJobs.data,
+    stats: stats.data,
     recommendations: recommendations.data,
+    recentActivity: recentActivity.data,
+    savedJobs: savedJobs.data,
   };
 };

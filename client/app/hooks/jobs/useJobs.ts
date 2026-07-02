@@ -2,8 +2,8 @@ import api from "@/app/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
 interface JobSearch {
-  page?:1,
-  limit?: 10,
+  page?: 1;
+  limit?: 10;
   location?: string;
   skills?: string;
   salary_min?: number;
@@ -35,11 +35,15 @@ export const useSearchSkills = (query: string) => {
   });
 };
 
-export const useJobs = (filters?: JobSearch) => {
+export const useJobs = (filters?: JobSearch, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["jobs", filters],
+    enabled,  
     queryFn: async () => {
       const params = new URLSearchParams();
+      if (filters?.page) params.append("page", String(filters.page));
+      if (filters?.limit) params.append("limit", String(filters.limit));
+      if (filters?.search) params.append("search", filters.search); // ← ye add kiya
       if (filters?.location) params.append("location", filters.location);
       if (filters?.skills) params.append("skills", filters.skills);
       if (filters?.salary_min)

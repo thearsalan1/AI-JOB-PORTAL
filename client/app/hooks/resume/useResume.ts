@@ -85,3 +85,18 @@ export const useGetResumeDetails = (resumeId: string, enabled: boolean) => {
     enabled,
   });
 };
+
+export const useToggleResumeSharing = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (resumeId: string) => {
+      const res = await api.patch(`/resume/${resumeId}/share`);
+      return res.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["resumes"] });
+      toast.success(data.message);
+    },
+    onError: () => toast.error("Failed to update sharing"),
+  });
+};

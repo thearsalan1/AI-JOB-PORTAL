@@ -12,6 +12,8 @@ import useApplyJob from "@/app/hooks/jobs/useApplyJobs";
 import { useState } from "react";
 import { useGetResumes } from "@/app/hooks/resume/useResume";
 import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
+import { useEffect } from "react";
+import { useTrackActivity } from "@/app/hooks/activity/useTrackActivity";
 
 const JobDetailPage = () => {
   const { id } = useParams();
@@ -22,6 +24,14 @@ const JobDetailPage = () => {
 
   const { saved, saveMutation } = useSaveJob(id as string);
   const applyMutation = useApplyJob();
+  const trackActivity = useTrackActivity();
+
+  useEffect(() => {
+  if (id) {
+    trackActivity.mutate({ action: "view_job", job_id: id as string });
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [id]);
 
   const { data: job, isLoading } = useQuery({
     queryKey: ["job", id],

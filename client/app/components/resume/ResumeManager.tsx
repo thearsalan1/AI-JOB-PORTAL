@@ -12,6 +12,7 @@ import {
 } from "@/app/hooks/resume/useResume";
 import toast from "react-hot-toast";
 import api from "@/app/lib/axios";
+import { useToggleResumeSharing } from "@/app/hooks/resume/useResume";
 
 interface SelectedSkill {
   value: string;
@@ -44,6 +45,15 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
     expandedId || "",
     !!expandedId,
   );
+
+  const toggleSharing = useToggleResumeSharing();
+
+  const handleCopyLink = (resumeId: string) => {
+    const link = `${process.env.NEXT_PUBLIC_API_URL}/resume/${resumeId}/shared`;
+    navigator.clipboard.writeText(link);
+    toast.success("Link copied!");
+  };
+
   const handleApplyToProfile = async (parsedData: any) => {
     if (!onApplyToProfile) return;
     setApplyingId(expandedId);
@@ -174,6 +184,24 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
                   >
                     View
                   </a>
+                  <button
+                    onClick={() => toggleSharing.mutate(resume._id)}
+                    disabled={toggleSharing.isPending}
+                    className={`text-xs font-semibold hover:underline ${
+                      resume.is_shared ? "text-emerald-600" : "text-gray-400"
+                    }`}
+                  >
+                    {resume.is_shared ? "Shared ✓" : "Share"}
+                  </button>
+
+                  {resume.is_shared && (
+                    <button
+                      onClick={() => handleCopyLink(resume._id)}
+                      className="text-xs text-[#1a3c6e] font-semibold hover:underline"
+                    >
+                      Copy Link
+                    </button>
+                  )}
                   <button
                     onClick={() => deleteResume.mutate(resume._id)}
                     disabled={deleteResume.isPending}

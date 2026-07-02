@@ -5,10 +5,12 @@ import { HiOfficeBuilding } from "react-icons/hi";
 import { MdLocationOn } from "react-icons/md";
 import { BsStars } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa";
-import useGetMatches from "@/app/hooks/matches/useGetMatches";
+import { useGetMatches } from "@/app/hooks/matches/useGetMatches";
 import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 import { FaRegStar, FaStar } from "react-icons/fa";
-
+import { useRecalculateMatches } from "@/app/hooks/matches/useGetMatches";
+import MatchDetailsModal from "@/app/components/matches/MatchDetailsModal";
+import { MdRefresh } from "react-icons/md";
 // Match score color
 const getScoreColor = (score: number) => {
   if (score >= 90) return "bg-green-100 text-green-600";
@@ -17,7 +19,13 @@ const getScoreColor = (score: number) => {
 };
 
 // Job Card
-const RecommendationCard = ({ match }: { match: any }) => {
+const RecommendationCard = ({
+  match,
+  onViewMatch,
+}: {
+  match: any;
+  onViewMatch: (id: string) => void;
+}) => {
   const router = useRouter();
   const job = match.job_id;
   const { saved, saveMutation } = useSaveJob(job?._id);
@@ -37,6 +45,12 @@ const RecommendationCard = ({ match }: { match: any }) => {
               {job?.location}
             </span>
           </div>
+          <button
+            onClick={() => onViewMatch(match._id)}
+            className={`text-xs font-bold px-3 py-1 rounded-full ${getScoreColor(match.match_score)} hover:opacity-80 transition`}
+          >
+            {match.match_score}% Match
+          </button>
         </div>
         {/* Match Score */}
         <span
@@ -97,12 +111,13 @@ const RecommendationCard = ({ match }: { match: any }) => {
 // Main Page
 const Page = () => {
   const [minScore, setMinScore] = useState(70);
+  const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
   const { data, isLoading } = useGetMatches(minScore);
+  const recalcMatches = useRecalculateMatches();
   const matches = data?.matches ?? [];
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6">
-      {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
           <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
@@ -114,30 +129,40 @@ const Page = () => {
           </p>
         </div>
 
-        {/* Min Score Filter */}
-        <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-2">
-          <span className="text-sm text-gray-500">Min Match:</span>
-          <input
-            type="range"
-            min="50"
-            max="95"
-            step="5"
-            value={minScore}
-            onChange={(e) => setMinScore(Number(e.target.value))}
-            className="w-24 accent-[#1a3c6e]"
-          />
-          <span className="text-sm font-semibold text-[#1a3c6e]">
-            {minScore}%+
-          </span>
+        <div className="flex items-center gap-3">
+          {/* Refresh button */}
+          <button
+            onClick={() => recalcMatches.mutate()}
+            disabled={recalcMatches.isPending}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition disabled:opacity-50"
+          >
+            <MdRefresh size={16} />
+            {recalcMatches.isPending ? "Refreshing..." : "Refresh"}
+          </button>
+
+          {/* Min Score Filter — same as pehle */}
+          <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-2">
+            <span className="text-sm text-gray-500">Min Match:</span>
+            <input
+              type="range"
+              min="50"
+              max="95"
+              step="5"
+              value={minScore}
+              onChange={(e) => setMinScore(Number(e.target.value))}
+              className="w-24 accent-[#1a3c6e]"
+            />
+            <span className="text-sm font-semibold text-[#1a3c6e]">
+              {minScore}%+
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="text-center text-gray-400 py-20">Loading...</div>
       )}
 
-      {/* Empty */}
       {!isLoading && matches.length === 0 && (
         <div className="text-center text-gray-400 py-20">
           <BsStars size={40} className="mx-auto mb-4 opacity-20" />
@@ -146,12 +171,22 @@ const Page = () => {
         </div>
       )}
 
-      {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {matches.map((match: any) => (
-          <RecommendationCard key={match._id} match={match} />
+          <RecommendationCard
+            key={match._id}
+            match={match}
+            onViewMatch={setSelectedMatchId}
+          />
         ))}
       </div>
+
+      {selectedMatchId && (
+        <MatchDetailsModal
+          matchId={selectedMatchId}
+          onClose={() => setSelectedMatchId(null)}
+        />
+      )}
     </div>
   );
 };

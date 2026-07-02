@@ -1,68 +1,56 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { BsBuildingsFill, BsStars } from "react-icons/bs";
-import { FaArrowRight, FaBookmark } from "react-icons/fa";
-import { FiBriefcase } from "react-icons/fi";
+import { BsStars } from "react-icons/bs";
+import { FaArrowRight, FaBookmark, FaCheckCircle } from "react-icons/fa";
+import { FiBriefcase, FiTarget } from "react-icons/fi";
 import { useAuthStore } from "@/app/store/authStore";
-import { useQuery } from "@tanstack/react-query";
-import api from "@/app/lib/axios";
+import useDashboard from "@/app/hooks/dashboard/useDashboard";
 
 const Page = () => {
   const { user } = useAuthStore();
+  const router = useRouter();
+  const { data, isLoading } = useDashboard();
 
-  // Applications count
-  const { data: applicationsData } = useQuery({
-    queryKey: ["my-applications"],
-    queryFn: async () => {
-      const res = await api.get("/applications");
-      return res.data;
-    },
-    enabled: user?.role === "seeker",
-  });
+  const stats = data?.stats;
+  const recommendations = data?.recommendations?.recommendations ?? [];
+  const recentActivity = data?.recentActivity?.recent ?? [];
+  const savedJobsCount = data?.savedJobs?.savedJobs?.length ?? 0;
 
-  // Saved jobs count
-  const { data: savedJobsData } = useQuery({
-    queryKey: ["saved-jobs"],
-    queryFn: async () => {
-      const res = await api.get("/jobs/saved");
-      return res.data;
-    },
-  });
+  // Time ke hisaab se greeting — pehle hamesha "Good Morning" tha
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
 
-  // Recommendations
-  const { data: recommendationsData, isLoading: recLoading } = useQuery({
-    queryKey: ["recommendations"],
-    queryFn: async () => {
-      const res = await api.get("/matches/recommendations");
-      return res.data;
-    },
-    enabled: user?.role === "seeker",
-  });
-
-  const recommendations = recommendationsData?.recommendations ?? [];
-
-  const stats = [
+  const statCards = [
     {
       title: "Applications Sent",
-      value: applicationsData?.applications?.length ?? 0,
+      value: stats?.total_applications ?? 0,
       icon: <FiBriefcase />,
       bg: "bg-blue-100",
       color: "text-blue-600",
     },
     {
+      title: "Shortlisted",
+      value: stats?.shortlisted ?? 0,
+      icon: <FaCheckCircle />,
+      bg: "bg-green-100",
+      color: "text-green-600",
+    },
+    {
+      title: "Strong Matches (80%+)",
+      value: stats?.total_matches ?? 0,
+      icon: <FiTarget />,
+      bg: "bg-purple-100",
+      color: "text-purple-600",
+    },
+    {
       title: "Saved Jobs",
-      value: savedJobsData?.savedJobs?.length ?? 0,
+      value: savedJobsCount,
       icon: <FaBookmark />,
       bg: "bg-orange-100",
       color: "text-orange-600",
-    },
-    {
-      title: "Recommendations",
-      value: recommendations.length,
-      icon: <BsStars />,
-      bg: "bg-purple-100",
-      color: "text-purple-600",
     },
   ];
 
@@ -71,20 +59,24 @@ const Page = () => {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
-          Good Morning, {user?.name}! 👋
+          {greeting}, {user?.name}! 👋
         </h1>
         <p className="text-gray-500 text-sm sm:text-base">
-          You have{" "}
+          Your average match score is{" "}
+          <span className="text-[#1a3c6e] font-semibold">
+            {stats?.avg_match_score ?? 0}%
+          </span>{" "}
+          , and{" "}
           <span className="text-[#1a3c6e] font-semibold">
             {recommendations.length} new job matches
           </span>{" "}
-          based on your profile today.
+          according to your profile.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        {stats.map((item, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        {statCards.map((item, index) => (
           <div
             key={index}
             className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition"
@@ -94,11 +86,30 @@ const Page = () => {
             </div>
             <div>
               <p className="text-gray-500 text-sm">{item.title}</p>
-              <h2 className="text-2xl font-bold">{item.value}</h2>
+              <h2 className="text-2xl font-bold">
+                {isLoading ? "—" : item.value}
+              </h2>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Top Skills */}
+      {stats?.top_skills?.length > 0 && (
+        <div className="mt-6 bg-white rounded-2xl p-5">
+          <p className="text-sm text-gray-500 mb-3">Your top skills</p>
+          <div className="flex flex-wrap gap-2">
+            {stats.top_skills.map((s: any, i: number) => (
+              <span
+                key={i}
+                className="text-xs bg-[#1a3c6e]/10 text-[#1a3c6e] px-3 py-1 rounded-full font-medium"
+              >
+                {s.skill_name} • Lvl {s.level}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* LEFT - Recommended Jobs */}
@@ -116,7 +127,7 @@ const Page = () => {
             </Link>
           </div>
 
-          {recLoading ? (
+          {isLoading ? (
             <div className="text-center text-gray-400 py-10">Loading...</div>
           ) : recommendations.length === 0 ? (
             <div className="bg-white rounded-2xl p-8 text-center text-gray-400">
@@ -148,10 +159,11 @@ const Page = () => {
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm text-gray-500">
-                    <span>
-                      {new Date(job.createdAt).toLocaleDateString()}
-                    </span>
-                    <button className="text-[#1a3c6e] font-medium hover:underline flex items-center gap-1">
+                    <span>{new Date(job.createdAt).toLocaleDateString()}</span>
+                    <button
+                      onClick={() => router.push(`/jobs/${job.job_id?._id}`)}
+                      className="text-[#1a3c6e] font-medium hover:underline flex items-center gap-1"
+                    >
                       View Details <FaArrowRight size={10} />
                     </button>
                   </div>
@@ -167,9 +179,36 @@ const Page = () => {
             <h1 className="text-xl sm:text-2xl font-semibold mb-5">
               Recently Viewed
             </h1>
-            <p className="text-gray-400 text-sm text-center py-4">
-              No recent activity yet
-            </p>
+
+            {isLoading && (
+              <p className="text-gray-400 text-sm text-center py-4">
+                Loading...
+              </p>
+            )}
+
+            {!isLoading && recentActivity.length === 0 && (
+              <p className="text-gray-400 text-sm text-center py-4">
+                No recent activity yet
+              </p>
+            )}
+
+            <div className="space-y-3">
+              {recentActivity.map((item: any, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => router.push(`/jobs/${item.job?._id}`)}
+                  className="w-full text-left border border-gray-100 rounded-xl px-3 py-2 hover:bg-gray-50 transition"
+                >
+                  <p className="text-sm font-medium text-gray-700">
+                    {item.job?.title}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {item.job?.location} •{" "}
+                    {new Date(item.viewed_at).toLocaleDateString()}
+                  </p>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

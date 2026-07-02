@@ -317,3 +317,34 @@ export const createSkill = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: error.message || "Server error" });
   }
 };
+
+// ─── Recent Activity (Recently Viewed jobs) ───────────────────────────────────
+export const getRecentActivity = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = toId(req.user!.userId);
+
+    const activities = await UserActivity.find({
+      user_id: userId,
+      action: 'view_job',
+    })
+      .populate<{ job_id: { _id: mongoose.Types.ObjectId; title: string; location?: string } | null }>(
+        'job_id',
+        'title location'
+      )
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+
+    const recent = activities
+      .filter((a) => a.job_id) // agar job delete ho chuka ho toh skip
+      .map((a) => ({
+        job: a.job_id,
+        viewed_at: a.createdAt,
+      }));
+
+    res.json({ recent });
+  } catch (error) {
+    console.error('Recent activity error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

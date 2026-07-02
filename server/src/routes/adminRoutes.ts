@@ -7,6 +7,7 @@ import {
   getNotifications,
   getPlatformStats,
   getSeekerDashboard,
+  getRecentActivity,
   markNotificationRead,
   trackActivity,
 } from "../controllers/AdminController";
@@ -23,5 +24,6 @@ router.post("/activity", trackActivity);
 router.get("/notifications", getNotifications);
 router.patch("/notifications/:id/read", markNotificationRead);
 router.post("/skill", authorizeRole("admin"), createSkill);
+router.get("/activity/recent", getRecentActivity);
 
 export default router;
