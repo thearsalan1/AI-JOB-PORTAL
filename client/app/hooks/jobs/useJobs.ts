@@ -2,11 +2,12 @@ import api from "@/app/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 
 interface JobSearch {
-  page?: 1;
-  limit?: 10;
+  page?: number;
+  limit?: number;
   location?: string;
   skills?: string;
   salary_min?: number;
+  employer_id?: string;
   remote?: boolean;
   job_type?: string;
   experience_level?: string;
@@ -38,7 +39,7 @@ export const useSearchSkills = (query: string) => {
 export const useJobs = (filters?: JobSearch, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["jobs", filters],
-    enabled,  
+    enabled,
     queryFn: async () => {
       const params = new URLSearchParams();
       if (filters?.page) params.append("page", String(filters.page));
@@ -49,6 +50,8 @@ export const useJobs = (filters?: JobSearch, enabled: boolean = true) => {
       if (filters?.salary_min)
         params.append("salary_min", String(filters.salary_min));
       if (filters?.remote) params.append("remote", "true");
+      if (filters?.employer_id)
+        params.append("employer_id", filters.employer_id);
       if (filters?.job_type) params.append("job_type", filters.job_type);
       if (filters?.sort) params.append("sort", filters.sort);
       if (filters?.experience_level)
@@ -58,3 +61,5 @@ export const useJobs = (filters?: JobSearch, enabled: boolean = true) => {
     },
   });
 };
+
+

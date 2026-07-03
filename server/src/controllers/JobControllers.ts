@@ -26,6 +26,7 @@ export const createJob = async (req: AuthRequest, res: Response) => {
     const job = new Job({
       employer_id: req.user!.userId,
       ...jobData,
+      skills: skills.map((s) => s.skill_id),
     });
     await job.save({ session });
 
@@ -65,6 +66,7 @@ export const getJobs = async (req: Request, res: Response) => {
       location,
       remote,
       salary_min,
+      employer_id,
       status = "open",
       job_type,
       experience_level,
@@ -86,6 +88,14 @@ export const getJobs = async (req: Request, res: Response) => {
         { company_name: { $regex: search, $options: "i" } },
       ];
     }
+
+    if (status) {
+      query.status = status;
+    } else if (!employer_id) {
+      query.status = "open";
+    }
+
+    if (employer_id) query.employer_id = employer_id;
 
     if (skills) query.skills = { $in: (skills as string).split(",") };
     if (location) query.location = { $regex: location, $options: "i" };

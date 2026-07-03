@@ -92,6 +92,8 @@ export interface IJob extends Document {
   salary_max?: number;
   location: string;
   remote: boolean;
+   job_type: "part-time" | "full-time" | "contract";  
+  experience_level: "junior" | "mid" | "senior"; 
   skills: mongoose.Types.ObjectId[];
   status: "open" | "closed";
   applications_count: number;

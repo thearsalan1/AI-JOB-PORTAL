@@ -31,6 +31,16 @@ const JobSchema:Schema = new Schema<IJob>({
     type:Boolean,
     default:false,
   },
+  job_type:{
+    type:String,
+    enum:['part-time','full-time','contract'],
+    required:true,
+  },
+  experience_level:{
+    type:String,
+    enum: ['junior', 'mid', 'senior'],
+    required:true,
+  },
   skills:[{
     type:mongoose.Types.ObjectId,
     ref:'Skill',
