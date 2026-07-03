@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import Cookies from "js-cookie";
 
 interface User {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   role: "seeker" | "employer" | "admin";

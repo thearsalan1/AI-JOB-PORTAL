@@ -10,13 +10,14 @@ import { MdDelete, MdLockOutline } from "react-icons/md";
 const MyJobsPage = () => {
   const { user } = useAuthStore();
   const { data, isLoading } = useJobs(
-    { employer_id: user?._id, limit: 50 },
-    !!user?._id,
+    { employer_id: user?.id, limit: 50 },
+    !!user?.id,
   );
   const closeJob = useCloseJob();
   const deleteJob = useDeleteJob();
 
   const jobs = data?.jobs ?? [];
+  console.log("Current user: ", user);
 
   if (user && user.role !== "employer") {
     return (

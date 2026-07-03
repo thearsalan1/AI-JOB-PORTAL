@@ -162,11 +162,31 @@ export const updatejob = async (req: AuthRequest, res: Response) => {
         .json({ message: "You can only update your own jobs" });
     }
 
-    const updated = await Job.findByIdAndUpdate(id, req.body, {
-      new: true,
-    }).populate("skills", "name");
+    const { skills, ...jobData } = req.body;
+
+    Object.assign(job, jobData);
+
+    if (Array.isArray(skills)) {
+      job.skills = skills.map((s: any) => s.skill_id);
+
+      await JobSkill.deleteMany({ job_id: id });
+      await Promise.all(
+        skills.map((s: any) => {
+          const jobSkill = new JobSkill({
+            job_id: id,
+            skill_id: s.skill_id,
+            required_level: s.required_level ?? 3,
+          });
+          return jobSkill.save();
+        }),
+      );
+    }
+
+    await job.save();
+    const updated = await Job.findById(id).populate("skills", "name");
     res.status(200).json(updated);
   } catch (error) {
+    console.error("updatejob error:", error); 
     res.status(500).json({ error: "Server error" });
   }
 };

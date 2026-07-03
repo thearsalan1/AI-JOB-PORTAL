@@ -53,10 +53,9 @@ const PostJobPage = () => {
 
   // Edit mode mein existing job data fetch karo
   const { data: jobData } = useJobs(
-    { employer_id: user?._id, limit: 50 },
-    isEditMode && !!user?._id,
+    { employer_id: user?.id, limit: 50 },
+    isEditMode && !!user?.id,
   );
-
   useEffect(() => {
     if (isEditMode && jobData?.jobs) {
       const job = jobData.jobs.find((j: any) => j._id === editId);
