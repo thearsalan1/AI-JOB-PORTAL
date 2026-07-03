@@ -22,7 +22,7 @@ const MyJobsPage = () => {
   if (user && user.role !== "employer") {
     return (
       <div className="text-center py-20 text-gray-400">
-        Sirf employers apni jobs manage kar sakte hain.
+        only employees can manage there jobs
       </div>
     );
   }
@@ -47,7 +47,7 @@ const MyJobsPage = () => {
 
       {!isLoading && jobs.length === 0 && (
         <div className="bg-white rounded-2xl p-8 text-center text-gray-400">
-          Koi job post nahi ki abhi tak
+          No jobs posted yet
         </div>
       )}
 
@@ -80,6 +80,12 @@ const MyJobsPage = () => {
             </div>
 
             <div className="flex items-center gap-3">
+              <Link
+                href={`/my-jobs/${job._id}/applicants`}
+                className="text-xs text-[#1a3c6e] font-semibold hover:underline mr-2"
+              >
+                {job.applications_count ?? 0} Applicants
+              </Link>
               <Link
                 href={`/post-job?id=${job._id}`}
                 className="text-gray-400 hover:text-[#1a3c6e]"

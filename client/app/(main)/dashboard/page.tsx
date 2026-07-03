@@ -7,6 +7,7 @@ import { FaArrowRight, FaBookmark, FaCheckCircle } from "react-icons/fa";
 import { FiBriefcase, FiTarget } from "react-icons/fi";
 import { useAuthStore } from "@/app/store/authStore";
 import useDashboard from "@/app/hooks/dashboard/useDashboard";
+import EmployerDashboard from "@/app/components/dashboard/EmployerDashboard";
 
 const Page = () => {
   const { user } = useAuthStore();
@@ -53,6 +54,10 @@ const Page = () => {
       color: "text-orange-600",
     },
   ];
+
+  if (user?.role === "employer") {
+    return <EmployerDashboard />;
+  }
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6">

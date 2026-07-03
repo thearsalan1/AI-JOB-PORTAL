@@ -5,62 +5,53 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { CiUser } from "react-icons/ci";
-import { FaBookmark, FaSearch, FaStar } from "react-icons/fa";
+import { FaBookmark, FaSearch, FaStar, FaBriefcase } from "react-icons/fa";
+import { MdOutlinePostAdd } from "react-icons/md";
 import {
   IoDocumentTextOutline,
   IoExitOutline,
   IoHomeOutline,
 } from "react-icons/io5";
 
-const Navigates = [
-  {
-    label: "Dashboard",
-    href: "/dashboard",
-    icon: <IoHomeOutline />,
-  },
-  {
-    label: "Browse Jobs",
-    href: "/jobs",
-    icon: <FaSearch />,
-  },
+const seekerNavigates = [
+  { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
+  { label: "Browse Jobs", href: "/jobs", icon: <FaSearch /> },
   {
     label: "My Applications",
     href: "/my-applications",
     icon: <IoDocumentTextOutline />,
   },
-  {
-    label: "Recommendations",
-    href: "/recommendations",
-    icon: <FaStar />,
-  },
-  {
-    label: "Saved Jobs",
-    href: "/saved-jobs",
-    icon: <FaBookmark />,
-  },
-  {
-    label: "My Profile",
-    href: "/my-profile",
-    icon: <CiUser />,
-  },
+  { label: "Recommendations", href: "/recommendations", icon: <FaStar /> },
+  { label: "Saved Jobs", href: "/saved-jobs", icon: <FaBookmark /> },
+  { label: "My Profile", href: "/my-profile", icon: <CiUser /> },
 ];
 
+const employerNavigates = [
+  { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
+  { label: "Post a Job", href: "/post-job", icon: <MdOutlinePostAdd /> },
+  { label: "My Jobs", href: "/my-jobs", icon: <FaBriefcase /> },
+];
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const {logout} = useAuthStore()
-  const router = useRouter()
-  
-  const handleLogOut = ()=>{
+  const { logout, user } = useAuthStore();
+  const router = useRouter();
+
+  const handleLogOut = () => {
     logout();
     router.push("/sign-in");
-  }
+  };
+
+  // Role ke hisaab se sahi list choose karo — default seeker rakha
+  // (agar user abhi load nahi hua, tab tak seeker dikhega, employer login hote hi switch ho jaayega)
+  const navigates =
+    user?.role === "employer" ? employerNavigates : seekerNavigates;
+
   return (
     <aside className="flex flex-col justify-between h-full p-4 font-heading">
-
       {/* Top Links */}
       <div className="space-y-2">
-        {Navigates.map((item) => {
+        {navigates.map((item) => {
           const isActive = pathname === item.href;
 
           return (
@@ -82,7 +73,10 @@ const Sidebar = () => {
       </div>
 
       {/* Logout */}
-      <button  onClick={handleLogOut} className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition">
+      <button
+        onClick={handleLogOut}
+        className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition"
+      >
         <IoExitOutline size={18} />
         Log out
       </button>
