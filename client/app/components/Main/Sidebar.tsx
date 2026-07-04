@@ -31,6 +31,7 @@ const employerNavigates = [
   { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
   { label: "Post a Job", href: "/post-job", icon: <MdOutlinePostAdd /> },
   { label: "My Jobs", href: "/my-jobs", icon: <FaBriefcase /> },
+  { label: "Company Profile", href: "/employer-profile", icon: <CiUser /> }, // ← naya
 ];
 
 const adminNavigates = [
