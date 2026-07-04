@@ -10,6 +10,10 @@ const UserSchema: Schema = new Schema<IUser>({
   phone: String,
   location: String,
   isVerified: { type: Boolean, default: false },
+  isBanned:{
+    type:Boolean,
+    default:false
+  },
   otp: String,
   otpExpiry: Number     
 }, { timestamps: true });

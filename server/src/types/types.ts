@@ -19,6 +19,7 @@ export interface IUser extends Document {
   location?: string;
   isVerified: boolean;
   createdAt: Date;
+  isBanned:boolean
   otp?: string;
   otpExpiry?: number;
 }

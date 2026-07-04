@@ -70,6 +70,12 @@ export const login = async (req: Request, res: Response) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
+    if (user.isBanned) {
+      return res
+        .status(403)
+        .json({ error: "Your account has been suspended. Contact support." });
+    }
+
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET!,
@@ -183,5 +189,80 @@ export const verify = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error("Verification error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+export const getAllUsers = async (req: AuthRequest, res: Response) => {
+  try {
+    const { page = 1, limit = 20, role, search } = req.query;
+    const query: any = {};
+    if (role) query.role = role;
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+    const users = await User.find(query)
+      .select("-password -otp -otpExpiry")
+      .limit(+limit)
+      .skip((+page - 1) * +limit)
+      .sort({ createdAt: -1 });
+
+    const total = await User.countDocuments(query);
+    res.json({
+      users,
+      pagination: {
+        page: +page,
+        limit: +limit,
+        total,
+        pages: Math.ceil(total / +limit),
+      },
+    });
+  } catch (error) {
+    console.error("Get all users error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const toggleUserBan = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (id === req.user!.userId) {
+      return res.status(400).json({ error: "You cannot ban yourself" });
+    }
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    user.isBanned = !user.isBanned;
+    await user.save();
+  } catch (error) {
+    console.error("Toggle ban error:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const updateUserRole = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!["seeker", "employer", "admin"].includes(role)) {
+      return res.status(400).json({ error: "Invalid role" });
+    }
+    if (id === req.user!.userId) {
+      return res.status(400).json({ error: "You cannot change your own role" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { role },
+      { new: true },
+    ).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({ message: "Role updated", user });
+  } catch (error) {
+    console.error("Update role error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 };

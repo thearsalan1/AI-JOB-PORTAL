@@ -12,6 +12,7 @@ import {
   IoExitOutline,
   IoHomeOutline,
 } from "react-icons/io5";
+import { FiUsers } from "react-icons/fi";
 
 const seekerNavigates = [
   { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
@@ -34,6 +35,7 @@ const employerNavigates = [
 
 const adminNavigates = [
   { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
+  { label: "User Management", href: "/admin/users", icon: <FiUsers /> },
 ];
 
 const Sidebar = () => {
