@@ -86,6 +86,7 @@ const MyJobsPage = () => {
               >
                 {job.applications_count ?? 0} Applicants
               </Link>
+               
               <Link
                 href={`/post-job?id=${job._id}`}
                 className="text-gray-400 hover:text-[#1a3c6e]"

@@ -32,6 +32,13 @@ export const register = async (req: Request, res: Response) => {
       { expiresIn: "7d" },
     );
 
+    if (!["seeker", "employer"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role. Only seeker or employer allowed.",
+      });
+    }
+
     try {
       await sendEmail(
         email,

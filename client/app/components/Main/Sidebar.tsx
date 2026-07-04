@@ -32,6 +32,10 @@ const employerNavigates = [
   { label: "My Jobs", href: "/my-jobs", icon: <FaBriefcase /> },
 ];
 
+const adminNavigates = [
+  { label: "Dashboard", href: "/dashboard", icon: <IoHomeOutline /> },
+];
+
 const Sidebar = () => {
   const pathname = usePathname();
   const { logout, user } = useAuthStore();
@@ -42,10 +46,12 @@ const Sidebar = () => {
     router.push("/sign-in");
   };
 
-  // Role ke hisaab se sahi list choose karo — default seeker rakha
-  // (agar user abhi load nahi hua, tab tak seeker dikhega, employer login hote hi switch ho jaayega)
   const navigates =
-    user?.role === "employer" ? employerNavigates : seekerNavigates;
+    user?.role === "employer"
+      ? employerNavigates
+      : user?.role === "admin"
+        ? adminNavigates
+        : seekerNavigates;
 
   return (
     <aside className="flex flex-col justify-between h-full p-4 font-heading">

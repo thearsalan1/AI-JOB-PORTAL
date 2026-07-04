@@ -8,6 +8,7 @@ import { FiBriefcase, FiTarget } from "react-icons/fi";
 import { useAuthStore } from "@/app/store/authStore";
 import useDashboard from "@/app/hooks/dashboard/useDashboard";
 import EmployerDashboard from "@/app/components/dashboard/EmployerDashboard";
+import AdminDashboard from "@/app/components/dashboard/AdminDashboard";
 
 const Page = () => {
   const { user } = useAuthStore();
@@ -57,6 +58,9 @@ const Page = () => {
 
   if (user?.role === "employer") {
     return <EmployerDashboard />;
+  }
+  if (user?.role === "admin") {
+    return <AdminDashboard />;
   }
 
   return (
