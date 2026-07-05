@@ -19,7 +19,7 @@ export interface IUser extends Document {
   location?: string;
   isVerified: boolean;
   createdAt: Date;
-  isBanned:boolean
+  isBanned: boolean;
   otp?: string;
   otpExpiry?: number;
 }
@@ -87,14 +87,15 @@ export interface IResumeParsedData extends Document {
 
 export interface IJob extends Document {
   employer_id: mongoose.Types.ObjectId;
+  company_name: string;
   title: string;
   description: string;
   salary_min: number;
   salary_max?: number;
   location: string;
   remote: boolean;
-   job_type: "part-time" | "full-time" | "contract";  
-  experience_level: "junior" | "mid" | "senior"; 
+  job_type: "part-time" | "full-time" | "contract";
+  experience_level: "junior" | "mid" | "senior";
   skills: mongoose.Types.ObjectId[];
   status: "open" | "closed";
   applications_count: number;

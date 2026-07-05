@@ -23,7 +23,7 @@ const JobCard = ({ job }: { job: any }) => {
             </div>
             <span className="text-sm text-gray-400 mr-2">
               <HiOfficeBuilding className="inline mr-1" />
-              {job.employer_id?.company_name ?? "Company"}
+              {job.company_name || "Company"}
             </span>
             <span className="text-sm text-gray-400 mr-2">
               <MdLocationOn className="inline mr-1" />

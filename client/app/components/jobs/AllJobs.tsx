@@ -1,8 +1,9 @@
 "use client";
-import  { useState } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { useJobs } from "@/app/hooks/jobs/useJobs";
 import JobCard from "@/app/components/jobs/jobCards";
+import Pagination from "../ui/Pagination";
 
 const sortOptions = [
   { value: "newest", label: "Newest First" },
@@ -13,8 +14,11 @@ const sortOptions = [
 
 const AllJobs = ({ filters }: { filters: any }) => {
   const [sortBy, setSortBy] = useState(sortOptions[0]);
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useJobs({
+    page,
+    limit: 10,
     location: filters?.selectedLocation,
     skills: filters?.selectedSkills?.map((s: any) => s.value).join(","),
     salary_min: filters?.salary ? filters.salary * 1000 : undefined,
@@ -25,6 +29,7 @@ const AllJobs = ({ filters }: { filters: any }) => {
   });
 
   const jobs = data?.jobs ?? [];
+  const handleFilterChange = () => setPage(1);
 
   return (
     <div className="bg-white min-h-screen w-full rounded-2xl p-5">
@@ -42,8 +47,11 @@ const AllJobs = ({ filters }: { filters: any }) => {
             instanceId="sort-select"
             options={sortOptions}
             value={sortBy}
-            onChange={(selected) => setSortBy(selected as any)}
             isSearchable={false}
+            onChange={(selected) => {
+              setSortBy(selected as any);
+              setPage(1); // ← naya
+            }}
             classNames={{
               control: () =>
                 "!rounded-xl !border-gray-200 !bg-white !text-sm !min-h-[40px] !cursor-pointer",
@@ -68,6 +76,12 @@ const AllJobs = ({ filters }: { filters: any }) => {
           <JobCard key={job._id} job={job} />
         ))}
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={data?.pagination?.pages ?? 1}
+        onPageChange={setPage}
+      />
     </div>
   );
 };

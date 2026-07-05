@@ -1,23 +1,25 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/app/store/authStore";
 import { useJobs } from "@/app/hooks/jobs/useJobs";
 import { useCloseJob, useDeleteJob } from "@/app/hooks/jobs/useManageJobs";
 import { FiBriefcase, FiEdit2 } from "react-icons/fi";
 import { MdDelete, MdLockOutline } from "react-icons/md";
+import Pagination from "@/app/components/ui/Pagination";
 
 const MyJobsPage = () => {
   const { user } = useAuthStore();
+  const [page, setPage] = useState(1);
   const { data, isLoading } = useJobs(
-    { employer_id: user?.id, limit: 50 },
+    { employer_id: user?.id, limit: 10, page },
     !!user?.id,
   );
+
   const closeJob = useCloseJob();
   const deleteJob = useDeleteJob();
 
   const jobs = data?.jobs ?? [];
-  console.log("Current user: ", user);
 
   if (user && user.role !== "employer") {
     return (
@@ -86,7 +88,7 @@ const MyJobsPage = () => {
               >
                 {job.applications_count ?? 0} Applicants
               </Link>
-               
+
               <Link
                 href={`/post-job?id=${job._id}`}
                 className="text-gray-400 hover:text-[#1a3c6e]"
@@ -122,6 +124,12 @@ const MyJobsPage = () => {
           </div>
         ))}
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={data?.pagination?.pages ?? 1}
+        onPageChange={setPage}
+      />
     </div>
   );
 };

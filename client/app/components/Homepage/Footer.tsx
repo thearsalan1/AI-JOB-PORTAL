@@ -1,14 +1,13 @@
 import React from "react";
 import { FiBriefcase } from "react-icons/fi";
+import Link from "next/link";
 
 const Footer = () => {
   return (
     <footer className="w-full bg-[#244373] text-white px-6 sm:px-10 py-12">
       <div className="max-w-6xl mx-auto">
-
         {/* Top Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -27,9 +26,16 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">For Candidates</h3>
             <ul className="space-y-2 text-sm text-white/70">
-              <li className="hover:text-white cursor-pointer">Browse Jobs</li>
-              <li className="hover:text-white cursor-pointer">Applied Jobs</li>
-              <li className="hover:text-white cursor-pointer">Job Alerts</li>
+              <li>
+                <Link href="/jobs" className="hover:text-white">
+                  Browse Jobs
+                </Link>
+              </li>
+              <li>
+                <Link href="/my-applications" className="hover:text-white">
+                  Applied Jobs
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -52,7 +58,6 @@ const Footer = () => {
               <li className="hover:text-white cursor-pointer">Terms</li>
             </ul>
           </div>
-
         </div>
 
         {/* Divider */}
@@ -62,7 +67,6 @@ const Footer = () => {
         <div className="text-sm text-white/60">
           © 2026 HireHub. All rights reserved.
         </div>
-
       </div>
     </footer>
   );

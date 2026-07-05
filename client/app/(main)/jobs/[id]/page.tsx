@@ -81,7 +81,7 @@ const JobDetailPage = () => {
                 <div className="flex flex-wrap gap-3 text-sm text-gray-500">
                   <span>
                     <HiOfficeBuilding className="inline mr-1" />
-                    {job.employer_id?.name ?? "Company"}
+                    {job.company_name || "Company"}
                   </span>
                   <span>
                     <MdLocationOn className="inline mr-1" />

@@ -4,6 +4,8 @@ import { Job } from "../models/Job";
 import { SavedJobs } from "../models/SavedJobs";
 import { JobSkill } from "../models/JobSkill";
 import mongoose from "mongoose";
+import { EmployerProfile } from "../models/EmployerProfile";
+import { User } from "../models/User";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
   let session: mongoose.ClientSession | null = null;
@@ -12,6 +14,14 @@ export const createJob = async (req: AuthRequest, res: Response) => {
       return res
         .status(403)
         .json({ message: "Only employers can create jobs" });
+    }
+    const employerProfile = await EmployerProfile.findOne({
+      user_id: req.user!.userId,
+    });
+    let companyName = employerProfile?.company_name;
+    if (!companyName) {
+      const employerUser = await User.findById(req.user!.userId);
+      companyName = employerUser?.name ?? "Company";
     }
 
     const { skills, required_level, ...jobData } = req.body;
@@ -25,6 +35,7 @@ export const createJob = async (req: AuthRequest, res: Response) => {
 
     const job = new Job({
       employer_id: req.user!.userId,
+      company_name: companyName,
       ...jobData,
       skills: skills.map((s) => s.skill_id),
     });
@@ -186,7 +197,7 @@ export const updatejob = async (req: AuthRequest, res: Response) => {
     const updated = await Job.findById(id).populate("skills", "name");
     res.status(200).json(updated);
   } catch (error) {
-    console.error("updatejob error:", error); 
+    console.error("updatejob error:", error);
     res.status(500).json({ error: "Server error" });
   }
 };

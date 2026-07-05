@@ -7,6 +7,10 @@ const JobSchema:Schema = new Schema<IJob>({
     ref:'User',
     required:true,
   },
+  company_name:{
+    type:String,
+    default:""
+  },
   title:{
     type:String,
     required:true,

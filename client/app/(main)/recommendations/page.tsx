@@ -45,12 +45,6 @@ const RecommendationCard = ({
               {job?.location}
             </span>
           </div>
-          <button
-            onClick={() => onViewMatch(match._id)}
-            className={`text-xs font-bold px-3 py-1 rounded-full ${getScoreColor(match.match_score)} hover:opacity-80 transition`}
-          >
-            {match.match_score}% Match
-          </button>
         </div>
         {/* Match Score */}
         <span

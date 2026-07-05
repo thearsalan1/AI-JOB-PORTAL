@@ -2,17 +2,20 @@
 import useRegister from "@/app/hooks/auth/useRegister";
 import { useAuthStore } from "@/app/store/authStore";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useState } from "react";
 import toast from "react-hot-toast";
 import { CiMail } from "react-icons/ci";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
 import { IoLockClosedOutline, IoPersonOutline } from "react-icons/io5";
 import { MdBusiness, MdPerson } from "react-icons/md";
 
-const Page = () => {
-  const [focus, setFocus] = useState("seeker");
+const SignUpForm = () => {
+  const searchParams = useSearchParams();
+  const roleFromUrl = searchParams.get("role");
+  const initialRole = roleFromUrl === "employer" ? "employer" : "seeker";
+  const [focus, setFocus] = useState(initialRole);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +25,8 @@ const Page = () => {
   const registerationMutation = useRegister();
   const router = useRouter();
   const { setAuth } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,16 +153,19 @@ const Page = () => {
                 size={18}
               />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <FaEye
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                size={18}
-              />
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
             </div>
 
             <hr className="mb-3 opacity-60" />
@@ -175,9 +183,9 @@ const Page = () => {
                 size={18}
               />
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="********"
-                className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
+                className="pl-10 pr-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
                 onChange={(e) => {
                   setConfirmPassword(e.target.value);
                   setError(
@@ -186,10 +194,17 @@ const Page = () => {
                 }}
               />
               {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-              <FaEye
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                size={18}
-              />
+              >
+                {showConfirmPassword ? (
+                  <FaEyeSlash size={18} />
+                ) : (
+                  <FaEye size={18} />
+                )}
+              </button>
             </div>
 
             {/* Terms */}
@@ -241,6 +256,14 @@ const Page = () => {
         </p>
       </footer>
     </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-100" />}>
+      <SignUpForm />
+    </Suspense>
   );
 };
 

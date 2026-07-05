@@ -2,10 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { FiBriefcase } from "react-icons/fi";
 import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import SingInDesign from "@/app/components/auth/SingInDesign";
 import useLogin from "@/app/hooks/auth/useLogin";
 import toast from "react-hot-toast";
@@ -18,6 +17,7 @@ const Page = () => {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { setAuth } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,22 +79,25 @@ const Page = () => {
               </Link>
             </div>
 
-            <div className="relative w-full mb-6">
+            <div className="relative w-full mb-3">
               <IoLockClosedOutline
                 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
                 size={18}
               />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="********"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
-                onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
-              <FaEye
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                size={18}
-              />
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
             </div>
 
             {/* Remember */}
