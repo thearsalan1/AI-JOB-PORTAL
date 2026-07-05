@@ -1,11 +1,7 @@
 "use client";
-import React, { useState } from "react";
-import { FaClock, FaRegStar } from "react-icons/fa";
-import { HiOfficeBuilding } from "react-icons/hi";
-import { MdLocationOn } from "react-icons/md";
+import  { useState } from "react";
 import Select from "react-select";
 import { useJobs } from "@/app/hooks/jobs/useJobs";
-import { useRouter } from "next/navigation";
 import JobCard from "@/app/components/jobs/jobCards";
 
 const sortOptions = [
@@ -17,7 +13,6 @@ const sortOptions = [
 
 const AllJobs = ({ filters }: { filters: any }) => {
   const [sortBy, setSortBy] = useState(sortOptions[0]);
-  const router = useRouter();
 
   const { data, isLoading } = useJobs({
     location: filters?.selectedLocation,

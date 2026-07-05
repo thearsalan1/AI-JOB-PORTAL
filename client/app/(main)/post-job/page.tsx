@@ -95,7 +95,7 @@ const PostJobPage = () => {
 
     if (!form.title || !form.description || !form.location) return;
     if (form.salary_max < form.salary_min) {
-      alert("Max salary min salary se kam nahi ho sakti");
+      alert("Max salary must be more than min salary");
       return;
     }
 
