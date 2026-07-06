@@ -6,6 +6,7 @@ import {
   useUpdateUserRole,
 } from "@/app/hooks/admin/useAdminUser";
 import { FiUsers } from "react-icons/fi";
+import Pagination from "@/app/components/ui/Pagination";
 
 const roleFilters = [
   { label: "All", value: "" },
@@ -17,7 +18,8 @@ const roleFilters = [
 const UsersPage = () => {
   const [roleFilter, setRoleFilter] = useState("");
   const [search, setSearch] = useState("");
-  const { data, isLoading } = useGetAllUsers(roleFilter, search);
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useGetAllUsers(roleFilter, search, page);
   const toggleBan = useToggleUserBan();
   const updateRole = useUpdateUserRole();
 
@@ -34,13 +36,18 @@ const UsersPage = () => {
           type="text"
           placeholder="Search by name/email..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            (setSearch(e.target.value), setPage(1));
+          }}
           className="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e] flex-1 min-w-[200px]"
         />
         {roleFilters.map((r) => (
           <button
             key={r.value}
-            onClick={() => setRoleFilter(r.value)}
+            onClick={() => {
+              setRoleFilter(r.value);
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
               roleFilter === r.value
                 ? "bg-[#1a3c6e] text-white"
@@ -103,6 +110,11 @@ const UsersPage = () => {
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={page}
+        totalPages={data?.pagination?.pages ?? 1}
+        onPageChange={setPage}
+      />
     </div>
   );
 };

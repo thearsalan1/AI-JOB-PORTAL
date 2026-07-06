@@ -30,7 +30,11 @@ const Page = () => {
       setAuth(data.data.user, data.data.token);
       router.push("/dashboard");
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          "Something went wrong",
+      );
     }
   };
   return (

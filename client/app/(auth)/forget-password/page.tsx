@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import useForgotPass from "@/app/hooks/auth/useForgotPass";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,32 +11,36 @@ import { IoBagOutline } from "react-icons/io5";
 import { LuShieldCheck } from "react-icons/lu";
 
 const Page = () => {
-  const [email,setEmail]= useState("");
+  const [email, setEmail] = useState("");
   const forgotPassword = useForgotPass();
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleSubmit =async (e:React.FormEvent)=>{
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await forgotPassword.mutateAsync({
-        email
-      })
+        email,
+      });
       if (response?.message === "OTP sent successfully") {
-      toast.success(response.message);
-      setTimeout(() => router.push(`/reset-password?email=${encodeURIComponent(email)}`), 1500);
-    } else {
-      toast.error(response?.message || "OTP Failed to send");
-    }
+        toast.success(response.message);
+        setTimeout(
+          () =>
+            router.push(`/reset-password?email=${encodeURIComponent(email)}`),
+          1500,
+        );
+      } else {
+        toast.error(response?.message || "OTP Failed to send");
+      }
     } catch (error: any) {
-    toast.error(
-      error?.response?.data?.message ||
-      "OTP Failed to send"
-    );
-  }
-  }
+      toast.error(
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          "OTP Failed to send",
+      );
+    }
+  };
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 relative overflow-hidden">
-
       {/* HEADER */}
       <header className="w-full px-4 sm:px-10 py-5 font-heading">
         <div className="flex items-center justify-center gap-3">
@@ -66,7 +70,6 @@ const Page = () => {
       {/* MAIN */}
       <main className="flex-1 flex items-center justify-center px-4 py-10 font-heading">
         <div className="w-full max-w-md sm:max-w-lg bg-white rounded-2xl shadow-xl relative overflow-hidden py-8 px-5 sm:px-8 flex flex-col items-center gap-5">
-
           {/* Top Gradient */}
           <div className="absolute top-0 left-0 w-full h-[4px] bg-gradient-to-r from-[#42047E] to-[#07F49E]" />
 
@@ -87,9 +90,7 @@ const Page = () => {
 
           {/* FORM */}
           <form className="w-full" onSubmit={handleSubmit}>
-            <label className="font-semibold text-sm">
-              Email address
-            </label>
+            <label className="font-semibold text-sm">Email address</label>
 
             <div className="relative w-full mb-4">
               <CiMail
@@ -101,11 +102,11 @@ const Page = () => {
                 placeholder="name@company.com"
                 className="pl-10 p-2 border rounded-xl w-full mt-2 bg-gray-50 text-sm"
                 value={email}
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
-            <button className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4" >
+            <button className="w-full rounded-xl bg-[#1a3c6e] py-3 text-white font-semibold flex items-center justify-center gap-2 mb-4">
               Send Reset Link
               <FaArrowRight />
             </button>

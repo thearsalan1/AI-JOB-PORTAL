@@ -93,9 +93,9 @@ const EmployerDashboard = () => {
 
         {!isLoading && (data?.recent_jobs?.length ?? 0) === 0 && (
           <div className="bg-white rounded-2xl p-8 text-center text-gray-400">
-            Koi job post nahi ki abhi tak.{" "}
+            No jobs posted yet.{" "}
             <Link href="/post-job" className="text-[#1a3c6e] underline">
-              Pehli job post karo
+              Post your first job
             </Link>
           </div>
         )}

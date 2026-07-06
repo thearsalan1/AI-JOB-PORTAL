@@ -2,13 +2,15 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/app/lib/axios";
 import toast from "react-hot-toast";
 
-export const useGetAllUsers = (role?: string, search?: string) => {
+export const useGetAllUsers = (role?: string, search?: string,page:number=1) => {
   return useQuery({
-    queryKey: ["admin-users", role, search],
+    queryKey: ["admin-users", role, search,page],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (role) params.append("role", role);
       if (search) params.append("search", search);
+      params.append("page",String(page));
+      params.append("limit","5")
       const res = await api.get(`/admin/users?${params.toString()}`);
       return res.data;
     },

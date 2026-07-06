@@ -2,12 +2,22 @@ import api from "@/app/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export const useGetJobApplications = (jobId: string, status?: string) => {
+export const useGetJobApplications = (
+  jobId: string,
+  status?: string,
+  page: number = 1,
+) => {
   return useQuery({
-    queryKey: ["job-applications", jobId, status],
+    queryKey: ["job-applications", jobId, status, page],
     queryFn: async () => {
-      const params = status ? `?status=${status}` : "";
-      const res = await api.get(`/applications/job/${jobId}${params}`);
+      const params = new URLSearchParams();
+      if (status) params.append("status", status);
+      params.append("page", String(page));
+      params.append("limit", "5");
+
+      const res = await api.get(
+        `/applications/job/${jobId}?${params.toString()}`,
+      );
       return res.data;
     },
     enabled: !!jobId,

@@ -87,9 +87,9 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
       skills: matchedSkills,
     });
     if (unmatched.length > 0) {
-      toast.error(`Ye skills DB mein nahi mili: ${unmatched.join(", ")}`);
+      toast.error(`This skill is not available: ${unmatched.join(", ")}`);
     }
-    toast.success(`${matchedSkills.length} skills profile mein add ho gayi`);
+    toast.success(`${matchedSkills.length} skills added in profile`);
     setApplyingId(null);
   };
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,12 +97,12 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
     if (!file) return;
 
     if (file.type !== "application/pdf") {
-      toast.error("Sirf PDF files allowed hain");
+      toast.error("Please provide pdf");
       e.target.value = "";
       return;
     }
     if (file.size > MAX_SIZE) {
-      toast.error("File 5MB se bada nahi ho sakta");
+      toast.error("file size must be under 5mb.");
       e.target.value = "";
       return;
     }
@@ -138,7 +138,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
       {isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {!isLoading && resumes.length === 0 && (
         <p className="text-gray-400 text-sm">
-          Koi resume upload nahi kiya abhi tak
+          No resume uploaded.
         </p>
       )}
 
@@ -224,7 +224,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
                   {!detailLoading && !detail?.parsedData && (
                     <div className="text-center py-4">
                       <p className="text-sm text-gray-400 mb-3">
-                        Is resume ko AI se parse nahi kiya gaya abhi tak
+                        This resume is not parsed using ai yet.
                       </p>
                       <button
                         onClick={() => parseResume.mutate(resume._id)}

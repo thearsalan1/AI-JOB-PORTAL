@@ -110,7 +110,7 @@ const MyJobsPage = () => {
 
               <button
                 onClick={() => {
-                  if (confirm("Pakka is job ko delete karna hai?")) {
+                  if (confirm("Are you sure you want to delete this job?")) {
                     deleteJob.mutate(job._id);
                   }
                 }}

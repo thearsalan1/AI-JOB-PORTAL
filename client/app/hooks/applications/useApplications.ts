@@ -23,6 +23,10 @@ export const useRemoveApplication = () => {
     },
     onSuccess: () => toast.success("Application dropped successfully"),
     onError: (error: any) =>
-      toast.error(error?.response?.data?.message || "Can't drop application"),
+      toast.error(
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          "Can't drop application",
+      ),
   });
 };

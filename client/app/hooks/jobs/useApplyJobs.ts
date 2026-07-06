@@ -26,7 +26,11 @@ const useApplyJob = () => {
       trackActivity.mutate({ action: "apply_job", job_id: variables.jobId });
     },
     onError: (error: any) =>
-      toast.error(error?.response?.data?.message || "Apply failed"),
+      toast.error(
+        error?.response?.data?.error ||
+          error?.response?.data?.message ||
+          "Apply failed",
+      ),
   });
 };
 

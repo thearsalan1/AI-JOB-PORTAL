@@ -63,6 +63,7 @@ const Page = () => {
       await createProfile.mutateAsync(form);
     }
 
+    let addedCount = 0;
     for (const skill of form.skills) {
       try {
         await addSkills.mutateAsync({
@@ -70,7 +71,12 @@ const Page = () => {
           level: skill.level,
           years_experience: skill.years_experience,
         });
+        addedCount++;
       } catch (err: any) {}
+    }
+
+    if (addedCount > 0) {
+      toast.success(`${addedCount} skill(s) saved`);
     }
 
     setIsEditing(false);

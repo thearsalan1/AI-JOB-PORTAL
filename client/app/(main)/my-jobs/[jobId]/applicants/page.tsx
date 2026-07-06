@@ -7,6 +7,7 @@ import {
 } from "@/app/hooks/applications/useJobapplications";
 import { FiBriefcase } from "react-icons/fi";
 import { FaFilePdf } from "react-icons/fa";
+import Pagination from "@/app/components/ui/Pagination";
 
 const statusTabs = [
   { label: "All", value: "" },
@@ -26,10 +27,12 @@ const statusColors: Record<string, string> = {
 const ApplicantsPage = () => {
   const { jobId } = useParams();
   const [activeStatus, setActiveStatus] = useState("");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useGetJobApplications(
     jobId as string,
     activeStatus,
+    page,
   );
   const updateStatus = useUpdateApplicationStatus();
 
@@ -46,7 +49,10 @@ const ApplicantsPage = () => {
         {statusTabs.map((tab) => (
           <button
             key={tab.value}
-            onClick={() => setActiveStatus(tab.value)}
+            onClick={() => {
+              setActiveStatus(tab.value);
+              setPage(1);
+            }}
             className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition ${
               activeStatus === tab.value
                 ? "bg-[#1a3c6e] text-white"
@@ -156,6 +162,11 @@ const ApplicantsPage = () => {
           </div>
         ))}
       </div>
+      <Pagination
+        currentPage={page}
+        totalPages={data?.pagination?.pages ?? 1}
+        onPageChange={setPage}
+      />
     </div>
   );
 };
