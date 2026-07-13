@@ -11,14 +11,13 @@ import { FaRegStar, FaStar } from "react-icons/fa";
 import { useRecalculateMatches } from "@/app/hooks/matches/useGetMatches";
 import MatchDetailsModal from "@/app/components/matches/MatchDetailsModal";
 import { MdRefresh } from "react-icons/md";
-// Match score color
+
 const getScoreColor = (score: number) => {
   if (score >= 90) return "bg-green-100 text-green-600";
   if (score >= 80) return "bg-blue-100 text-blue-600";
   return "bg-yellow-100 text-yellow-600";
 };
 
-// Job Card
 const RecommendationCard = ({
   match,
   onViewMatch,
@@ -32,34 +31,32 @@ const RecommendationCard = ({
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between items-start mb-3 gap-2">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="flex justify-center items-center rounded-xl border p-2 border-gray-200 h-11 w-11 shrink-0">
             <HiOfficeBuilding size={20} color="#1a3c6e" />
           </div>
-          <div>
-            <h2 className="font-semibold text-gray-800">{job?.title}</h2>
+          <div className="min-w-0">
+            <h2 className="font-semibold text-gray-800 truncate">
+              {job?.title}
+            </h2>
             <span className="text-sm text-gray-400">
               <MdLocationOn className="inline mr-1" />
               {job?.location}
             </span>
           </div>
         </div>
-        {/* Match Score */}
         <span
-          className={`text-xs font-bold px-3 py-1 rounded-full ${getScoreColor(match.match_score)}`}
+          className={`text-xs font-bold px-3 py-1 rounded-full shrink-0 ${getScoreColor(match.match_score)}`}
         >
           {match.match_score}% Match
         </span>
       </div>
 
-      {/* Salary */}
       <p className="text-sm text-emerald-500 mb-3">
         ${job?.salary_min?.toLocaleString()} / year
       </p>
 
-      {/* Reasons */}
       {match.reasons?.length > 0 && (
         <div className="mb-4">
           <p className="text-xs text-gray-400 mb-2">Why this match?</p>
@@ -76,7 +73,6 @@ const RecommendationCard = ({
         </div>
       )}
 
-      {/* Footer */}
       <div className="flex justify-between items-center">
         <button
           onClick={() => saveMutation.mutate()}
@@ -102,7 +98,6 @@ const RecommendationCard = ({
   );
 };
 
-// Main Page
 const Page = () => {
   const [minScore, setMinScore] = useState(70);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -111,10 +106,10 @@ const Page = () => {
   const matches = data?.matches ?? [];
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6">
-      <div className="flex justify-between items-start mb-6">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
             <BsStars className="text-[#00a897]" />
             Recommendations
           </h1>
@@ -123,20 +118,18 @@ const Page = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Refresh button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <button
             onClick={() => recalcMatches.mutate()}
             disabled={recalcMatches.isPending}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition disabled:opacity-50"
           >
             <MdRefresh size={16} />
             {recalcMatches.isPending ? "Refreshing..." : "Refresh"}
           </button>
 
-          {/* Min Score Filter — same as pehle */}
           <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-4 py-2">
-            <span className="text-sm text-gray-500">Min Match:</span>
+            <span className="text-sm text-gray-500 shrink-0">Min Match:</span>
             <input
               type="range"
               min="50"
@@ -144,9 +137,9 @@ const Page = () => {
               step="5"
               value={minScore}
               onChange={(e) => setMinScore(Number(e.target.value))}
-              className="w-24 accent-[#1a3c6e]"
+              className="w-full sm:w-24 accent-[#1a3c6e]"
             />
-            <span className="text-sm font-semibold text-[#1a3c6e]">
+            <span className="text-sm font-semibold text-[#1a3c6e] shrink-0">
               {minScore}%+
             </span>
           </div>

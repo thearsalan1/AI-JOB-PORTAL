@@ -63,9 +63,9 @@ const Page = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+        <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-2">
           {greeting}, {user?.name}! 👋
         </h1>
         <p className="text-gray-500 text-sm sm:text-base">
@@ -81,18 +81,22 @@ const Page = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mt-6">
         {statCards.map((item, index) => (
           <div
             key={index}
-            className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition"
+            className="bg-white rounded-2xl p-3 sm:p-5 flex items-center gap-3 sm:gap-4 shadow-sm hover:shadow-md transition"
           >
-            <div className={`p-3 rounded-xl text-2xl ${item.bg} ${item.color}`}>
+            <div
+              className={`p-2 sm:p-3 rounded-xl text-lg sm:text-2xl ${item.bg} ${item.color}`}
+            >
               {item.icon}
             </div>
-            <div>
-              <p className="text-gray-500 text-sm">{item.title}</p>
-              <h2 className="text-2xl font-bold">
+            <div className="min-w-0">
+              <p className="text-gray-500 text-xs sm:text-sm truncate">
+                {item.title}
+              </p>
+              <h2 className="text-lg sm:text-2xl font-bold">
                 {isLoading ? "—" : item.value}
               </h2>
             </div>
@@ -101,7 +105,7 @@ const Page = () => {
       </div>
 
       {stats?.top_skills?.length > 0 && (
-        <div className="mt-6 bg-white rounded-2xl p-5">
+        <div className="mt-6 bg-white rounded-2xl p-4 sm:p-5">
           <p className="text-sm text-gray-500 mb-3">Your top skills</p>
           <div className="flex flex-wrap gap-2">
             {stats.top_skills.map((s: any, i: number) => (
@@ -119,7 +123,7 @@ const Page = () => {
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5 gap-3">
-            <h1 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold flex items-center gap-2">
               <BsStars className="text-[#00a897]" />
               Recommended For You
             </h1>
@@ -142,18 +146,18 @@ const Page = () => {
               {recommendations.map((job: any, index: number) => (
                 <div
                   key={index}
-                  className="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition"
+                  className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-md transition"
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
-                    <div>
-                      <h2 className="font-semibold text-gray-800">
+                    <div className="min-w-0">
+                      <h2 className="font-semibold text-gray-800 truncate">
                         {job.job_id?.title}
                       </h2>
                       <p className="text-sm text-gray-500">
                         {job.job_id?.location}
                       </p>
                     </div>
-                    <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-medium">
+                    <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full font-medium shrink-0">
                       {job.match_score}% Match
                     </span>
                   </div>
@@ -179,7 +183,7 @@ const Page = () => {
 
         <div className="lg:block">
           <div className="bg-white rounded-2xl p-4">
-            <h1 className="text-xl sm:text-2xl font-semibold mb-5">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-5">
               Recently Viewed
             </h1>
 
@@ -202,7 +206,7 @@ const Page = () => {
                   onClick={() => router.push(`/jobs/${item.job?._id}`)}
                   className="w-full text-left border border-gray-100 rounded-xl px-3 py-2 hover:bg-gray-50 transition"
                 >
-                  <p className="text-sm font-medium text-gray-700">
+                  <p className="text-sm font-medium text-gray-700 truncate">
                     {item.job?.title}
                   </p>
                   <p className="text-xs text-gray-400">

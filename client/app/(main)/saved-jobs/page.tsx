@@ -8,7 +8,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import useGetSavedJobs from "@/app/hooks/jobs/useGetSavedJobs";
 import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 
-// ── Saved Job Card ──────────────────────────────────────────
 const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -17,14 +16,15 @@ const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition">
-      {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between items-start mb-3 gap-2">
+        <div className="flex items-center gap-3 min-w-0">
           <div className="flex justify-center items-center rounded-xl border p-2 border-gray-200 h-11 w-11 shrink-0">
             <HiOfficeBuilding size={20} color="#1a3c6e" />
           </div>
-          <div>
-            <h2 className="font-semibold text-gray-800">{job?.title}</h2>
+          <div className="min-w-0">
+            <h2 className="font-semibold text-gray-800 truncate">
+              {job?.title}
+            </h2>
             <span className="text-sm text-gray-400">
               <MdLocationOn className="inline mr-1" />
               {job?.location}
@@ -32,7 +32,6 @@ const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
           </div>
         </div>
 
-        {/* Unsave button */}
         <button
           onClick={() =>
             saveMutation.mutate(undefined, {
@@ -41,14 +40,13 @@ const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
             })
           }
           disabled={saveMutation.isPending}
-          className="text-[#1a3c6e] hover:text-red-500 transition"
+          className="text-[#1a3c6e] hover:text-red-500 transition shrink-0"
           title="Remove from saved"
         >
           <FaBookmark size={18} />
         </button>
       </div>
 
-      {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
         {job?.remote && (
           <span className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">
@@ -63,19 +61,17 @@ const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
         </span>
       </div>
 
-      {/* Description */}
       <p className="text-sm text-gray-400 mb-4 line-clamp-2">
         {job?.description}
       </p>
 
-      {/* Footer */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-2">
         <span className="text-xs text-gray-400">
           Saved {new Date(savedJob.createdAt).toLocaleDateString()}
         </span>
         <button
           onClick={() => router.push(`/jobs/${job?._id}`)}
-          className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition"
+          className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition shrink-0"
         >
           View Details
         </button>
@@ -84,15 +80,13 @@ const SavedJobCard = ({ savedJob }: { savedJob: any }) => {
   );
 };
 
-// ── Main Page ───────────────────────────────────────────────
 const Page = () => {
   const { data: savedJobs, isLoading } = useGetSavedJobs();
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6">
-      {/* Header */}
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-heading text-[#1a3c6e]">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e]">
           Saved Jobs
         </h1>
         <p className="text-gray-500 text-sm mt-1">
@@ -100,12 +94,10 @@ const Page = () => {
         </p>
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="text-center text-gray-400 py-20">Loading...</div>
       )}
 
-      {/* Empty state */}
       {!isLoading && savedJobs?.length === 0 && (
         <div className="text-center text-gray-400 py-20">
           <FaBookmark size={40} className="mx-auto mb-4 opacity-20" />
@@ -114,7 +106,6 @@ const Page = () => {
         </div>
       )}
 
-      {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {savedJobs?.map((savedJob: any) => (
           <SavedJobCard key={savedJob._id} savedJob={savedJob} />

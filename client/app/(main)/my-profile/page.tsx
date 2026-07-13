@@ -130,16 +130,15 @@ const Page = () => {
     setIsEditing(true);
   };
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold font-heading text-[#1a3c6e]">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-4xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e]">
           My Profile
         </h1>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition"
           >
             <MdEdit size={16} /> Edit Profile
           </button>
@@ -148,13 +147,13 @@ const Page = () => {
             <button
               onClick={handleSave}
               disabled={updateProfile.isPending || createProfile.isPending}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50"
             >
               <MdSave size={16} /> Save
             </button>
             <button
               onClick={() => setIsEditing(false)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition"
             >
               <MdCancel size={16} /> Cancel
             </button>
@@ -162,7 +161,6 @@ const Page = () => {
         )}
       </div>
 
-      {/* No profile yet */}
       {!profile && !isEditing && (
         <div className="bg-white rounded-2xl p-8 text-center shadow-sm">
           <BsPerson size={50} className="mx-auto mb-4 text-gray-300" />
@@ -178,14 +176,12 @@ const Page = () => {
 
       {(profile || isEditing) && (
         <div className="space-y-6">
-          {/* Basic Info */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <BsPerson size={20} color="#1a3c6e" /> Basic Info
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Name — from auth store */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Full Name
@@ -193,15 +189,13 @@ const Page = () => {
                 <p className="text-gray-700 mt-1 font-medium">{user?.name}</p>
               </div>
 
-              {/* Email */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Email
                 </label>
-                <p className="text-gray-700 mt-1">{user?.email}</p>
+                <p className="text-gray-700 mt-1 truncate">{user?.email}</p>
               </div>
 
-              {/* Current Role */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Current Role
@@ -223,7 +217,6 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Experience */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Experience (Years)
@@ -248,7 +241,6 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Preferred Location */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Preferred Location
@@ -270,7 +262,6 @@ const Page = () => {
                 )}
               </div>
 
-              {/* Preferred Salary */}
               <div>
                 <label className="text-xs text-gray-400 font-semibold">
                   Preferred Salary ($/year)
@@ -296,7 +287,6 @@ const Page = () => {
               </div>
             </div>
 
-            {/* Bio */}
             <div className="mt-4">
               <label className="text-xs text-gray-400 font-semibold">Bio</label>
               {isEditing ? (
@@ -315,16 +305,14 @@ const Page = () => {
             </div>
           </div>
 
-          {/* Resume */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <FiBriefcase size={18} color="#1a3c6e" /> Resume
             </h2>
             <ResumeManager onApplyToProfile={handleApplyAIData} />
           </div>
 
-          {/* Education */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                 <HiAcademicCap size={20} color="#1a3c6e" /> Education
@@ -345,7 +333,10 @@ const Page = () => {
 
             <div className="space-y-3">
               {form.education.map((edu, index) => (
-                <div key={index} className="flex gap-3 items-center">
+                <div
+                  key={index}
+                  className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center"
+                >
                   {isEditing ? (
                     <>
                       <input
@@ -356,26 +347,31 @@ const Page = () => {
                           updated[index].degree = e.target.value;
                           setForm({ ...form, education: updated });
                         }}
-                        className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                        className="flex-1 min-w-0 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
                         placeholder="e.g. B.Tech Computer Science"
                       />
-                      <input
-                        type="number"
-                        value={edu.year}
-                        onChange={(e) => {
-                          const updated = [...form.education];
-                          updated[index].year = Number(e.target.value);
-                          setForm({ ...form, education: updated });
-                        }}
-                        className="w-24 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
-                        placeholder="Year"
-                      />
-                      <button onClick={() => removeEducation(index)}>
-                        <MdDelete
-                          size={18}
-                          className="text-red-400 hover:text-red-600"
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="number"
+                          value={edu.year}
+                          onChange={(e) => {
+                            const updated = [...form.education];
+                            updated[index].year = Number(e.target.value);
+                            setForm({ ...form, education: updated });
+                          }}
+                          className="w-24 border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                          placeholder="Year"
                         />
-                      </button>
+                        <button
+                          onClick={() => removeEducation(index)}
+                          className="shrink-0"
+                        >
+                          <MdDelete
+                            size={18}
+                            className="text-red-400 hover:text-red-600"
+                          />
+                        </button>
+                      </div>
                     </>
                   ) : (
                     <div className="flex gap-3">
@@ -390,16 +386,13 @@ const Page = () => {
             </div>
           </div>
 
-          {/* Skills */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
               <FiBriefcase size={18} color="#1a3c6e" /> Skills
             </h2>
 
-            {/* Existing skills — edit mode mein delete button bhi dikhe */}
             <UserSkills showDelete={isEditing} />
 
-            {/* Sirf edit mode mein add karne ka dropdown */}
             {isEditing && (
               <div className="mt-4">
                 <p className="text-sm text-gray-400 mb-2">Add more skills</p>
@@ -426,44 +419,50 @@ const Page = () => {
                     {form.skills.map((skill, index) => (
                       <div
                         key={skill.value}
-                        className="flex items-center gap-3 border border-gray-200 rounded-xl px-3 py-2"
+                        className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 border border-gray-200 rounded-xl px-3 py-2"
                       >
-                        <span className="flex-1 text-sm font-medium text-gray-700">
+                        <span className="flex-1 min-w-0 text-sm font-medium text-gray-700 truncate">
                           {skill.label}
                         </span>
-                        <div className="flex items-center gap-1">
-                          <label className="text-xs text-gray-400">Level</label>
-                          <select
-                            value={skill.level}
-                            onChange={(e) => {
-                              const updated = [...form.skills];
-                              updated[index].level = Number(e.target.value);
-                              setForm({ ...form, skills: updated });
-                            }}
-                            className="border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
-                          >
-                            {[1, 2, 3, 4, 5].map((lvl) => (
-                              <option key={lvl} value={lvl}>
-                                {lvl}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <label className="text-xs text-gray-400">Years</label>
-                          <input
-                            type="number"
-                            min={0}
-                            value={skill.years_experience}
-                            onChange={(e) => {
-                              const updated = [...form.skills];
-                              updated[index].years_experience = Number(
-                                e.target.value,
-                              );
-                              setForm({ ...form, skills: updated });
-                            }}
-                            className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
-                          />
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <div className="flex items-center gap-1">
+                            <label className="text-xs text-gray-400">
+                              Level
+                            </label>
+                            <select
+                              value={skill.level}
+                              onChange={(e) => {
+                                const updated = [...form.skills];
+                                updated[index].level = Number(e.target.value);
+                                setForm({ ...form, skills: updated });
+                              }}
+                              className="border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                            >
+                              {[1, 2, 3, 4, 5].map((lvl) => (
+                                <option key={lvl} value={lvl}>
+                                  {lvl}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <label className="text-xs text-gray-400">
+                              Years
+                            </label>
+                            <input
+                              type="number"
+                              min={0}
+                              value={skill.years_experience}
+                              onChange={(e) => {
+                                const updated = [...form.skills];
+                                updated[index].years_experience = Number(
+                                  e.target.value,
+                                );
+                                setForm({ ...form, skills: updated });
+                              }}
+                              className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}

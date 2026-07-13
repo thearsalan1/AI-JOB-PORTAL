@@ -26,8 +26,8 @@ const UsersPage = () => {
   const users = data?.users ?? [];
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] mb-6 flex items-center gap-2">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-5xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e] mb-6 flex items-center gap-2">
         <FiUsers /> User Management
       </h1>
 
@@ -67,18 +67,18 @@ const UsersPage = () => {
         {users.map((u: any) => (
           <div
             key={u._id}
-            className="bg-white rounded-2xl p-4 shadow-sm flex justify-between items-center"
+            className="bg-white rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3"
           >
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="font-medium text-gray-700">{u.name}</p>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-medium text-gray-700 truncate">{u.name}</p>
                 {u.isBanned && (
-                  <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
+                  <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium shrink-0">
                     Banned
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-400">{u.email}</p>
+              <p className="text-sm text-gray-400 truncate">{u.email}</p>
             </div>
 
             <div className="flex items-center gap-3">

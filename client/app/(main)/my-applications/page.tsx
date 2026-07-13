@@ -36,13 +36,12 @@ const Page = () => {
     }
   };
 
-    const applications = data?.applications ?? [];
+  const applications = data?.applications ?? [];
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6">
-      {/* Header */}
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold font-heading text-[#1a3c6e]">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e]">
           My Applications
         </h1>
         <p className="text-gray-500 text-sm mt-1">
@@ -50,19 +49,18 @@ const Page = () => {
         </p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
         {["applied", "shortlisted", "hired", "rejected"].map((s) => (
           <div
             key={s}
-            className="bg-white rounded-2xl p-4 shadow-sm text-center"
+            className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm text-center"
           >
             <p
-              className={`text-xs font-semibold capitalize px-2 py-1 rounded-full inline-block mb-2 ${statusColors[s]}`}
+              className={`text-[10px] sm:text-xs font-semibold capitalize px-2 py-1 rounded-full inline-block mb-2 ${statusColors[s]}`}
             >
               {s}
             </p>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
               {data?.applications?.filter((a: any) => a.status === s).length ??
                 0}
             </h2>
@@ -70,13 +68,12 @@ const Page = () => {
         ))}
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 mb-6 flex-wrap">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition capitalize ${
+            className={`shrink-0 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition capitalize ${
               activeTab === tab
                 ? "bg-[#1a3c6e] text-white"
                 : "bg-white text-gray-500 border border-gray-200 hover:bg-gray-50"
@@ -87,12 +84,10 @@ const Page = () => {
         ))}
       </div>
 
-      {/* Loading */}
       {isLoading && (
         <div className="text-center text-gray-400 py-20">Loading...</div>
       )}
 
-      {/* Empty */}
       {!isLoading && applications.length === 0 && (
         <div className="text-center text-gray-400 py-20">
           <FiBriefcase size={40} className="mx-auto mb-4 opacity-20" />
@@ -100,20 +95,19 @@ const Page = () => {
         </div>
       )}
 
-      {/* Applications List */}
       <div className="space-y-4">
         {applications.map((app: any) => (
           <div
             key={app._id}
-            className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition"
+            className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5 hover:shadow-md transition"
           >
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+              <div className="flex items-center gap-3 min-w-0">
                 <div className="flex justify-center items-center rounded-xl border p-2 border-gray-200 h-11 w-11 shrink-0">
                   <HiOfficeBuilding size={20} color="#1a3c6e" />
                 </div>
-                <div>
-                  <h2 className="font-semibold text-gray-800">
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-gray-800 truncate">
                     {app.job_id?.title ?? "Job Title"}
                   </h2>
                   <p className="text-sm text-gray-400">
@@ -122,25 +116,23 @@ const Page = () => {
                 </div>
               </div>
 
-              {/* Status badge */}
               <span
-                className={`text-xs font-semibold px-3 py-1 rounded-full capitalize ${statusColors[app.status]}`}
+                className={`self-start text-xs font-semibold px-3 py-1 rounded-full capitalize shrink-0 ${statusColors[app.status]}`}
               >
                 {app.status}
               </span>
             </div>
 
-            {/* Footer */}
-            <div className="flex justify-end mt-4 gap-2">
+            <div className="flex flex-col sm:flex-row sm:justify-end mt-4 gap-2">
               <button
                 onClick={() => router.push(`/jobs/${app.job_id?._id}`)}
-                className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition"
+                className="w-full sm:w-auto px-4 py-2 sm:py-1 rounded-2xl bg-[#1a3c6e] text-white text-sm hover:bg-blue-950 transition"
               >
                 View Job
               </button>
               <button
                 onClick={() => handleOnDeleteApplication(app._id)}
-                className="px-4 py-1 rounded-2xl bg-red-500 text-white text-sm hover:bg-red-600 transition"
+                className="w-full sm:w-auto px-4 py-2 sm:py-1 rounded-2xl bg-red-500 text-white text-sm hover:bg-red-600 transition"
               >
                 Remove Application
               </button>

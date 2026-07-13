@@ -27,11 +27,11 @@ const JobDetailPage = () => {
   const trackActivity = useTrackActivity();
 
   useEffect(() => {
-  if (id) {
-    trackActivity.mutate({ action: "view_job", job_id: id as string });
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [id]);
+    if (id) {
+      trackActivity.mutate({ action: "view_job", job_id: id as string });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const { data: job, isLoading } = useQuery({
     queryKey: ["job", id],
@@ -58,7 +58,7 @@ const JobDetailPage = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-6xl mx-auto">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-6xl mx-auto">
       <button
         onClick={() => router.back()}
         className="text-[#1a3c6e] text-sm font-semibold mb-6 flex items-center gap-1 hover:underline"
@@ -67,15 +67,14 @@ const JobDetailPage = () => {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
-            <div className="flex items-start gap-4 mb-4">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm mb-6">
+            <div className="flex flex-wrap items-start gap-4 mb-4">
               <div className="flex justify-center items-center rounded-xl border p-3 border-gray-200 h-14 w-14 shrink-0">
                 <HiOfficeBuilding size={24} color="#1a3c6e" />
               </div>
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold font-heading text-gray-800 mb-1">
+              <div className="flex-1 min-w-[200px]">
+                <h1 className="text-xl sm:text-2xl font-bold font-heading text-gray-800 mb-1">
                   {job.title}
                 </h1>
                 <div className="flex flex-wrap gap-3 text-sm text-gray-500">
@@ -94,7 +93,7 @@ const JobDetailPage = () => {
                 </div>
               </div>
               {job.remote && (
-                <span className="text-xs bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium">
+                <span className="text-xs bg-green-100 text-green-600 px-3 py-1 rounded-full font-medium shrink-0">
                   Remote
                 </span>
               )}
@@ -144,9 +143,8 @@ const JobDetailPage = () => {
           </div>
         </div>
 
-        {/* RIGHT */}
         <div>
-          <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-6">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm lg:sticky lg:top-6">
             <h2 className="text-xl font-bold text-gray-800 mb-1">
               ${job.salary_min?.toLocaleString()} - $
               {job.salary_max?.toLocaleString()}

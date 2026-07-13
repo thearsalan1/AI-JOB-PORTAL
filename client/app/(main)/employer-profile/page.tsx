@@ -60,15 +60,15 @@ const Page = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-3xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold font-heading text-[#1a3c6e]">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-3xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e]">
           Company Profile
         </h1>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition"
           >
             <MdEdit size={16} /> {profile ? "Edit" : "Create Profile"}
           </button>
@@ -77,13 +77,13 @@ const Page = () => {
             <button
               onClick={handleSave}
               disabled={createProfile.isPending || updateProfile.isPending}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50"
             >
               <MdSave size={16} /> Save
             </button>
             <button
               onClick={() => setIsEditing(false)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition"
             >
               <MdCancel size={16} /> Cancel
             </button>
@@ -105,8 +105,8 @@ const Page = () => {
       )}
 
       {(profile || isEditing) && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
-          <div className="flex items-center gap-4 mb-2">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+          <div className="flex flex-wrap items-center gap-4 mb-2">
             <div>
               <label className="text-xs text-gray-400 font-semibold">
                 Contact Person
@@ -205,7 +205,7 @@ const Page = () => {
                   placeholder="https://yourcompany.com"
                 />
               ) : (
-                <p className="text-gray-700 mt-1">
+                <p className="text-gray-700 mt-1 break-all">
                   {profile?.website ? (
                     <a
                       href={profile.website}

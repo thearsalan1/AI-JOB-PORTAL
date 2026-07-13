@@ -30,14 +30,14 @@ const MyJobsPage = () => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-4xl mx-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e] flex items-center gap-2">
           <FiBriefcase /> My Posted Jobs
         </h1>
         <Link
           href="/post-job"
-          className="px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition"
+          className="px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition text-center"
         >
           + Post New Job
         </Link>
@@ -57,13 +57,15 @@ const MyJobsPage = () => {
         {jobs.map((job: any) => (
           <div
             key={job._id}
-            className="bg-white rounded-2xl p-5 shadow-sm flex justify-between items-start"
+            className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
           >
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="font-semibold text-gray-800">{job.title}</h2>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <h2 className="font-semibold text-gray-800 truncate">
+                  {job.title}
+                </h2>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${
                     job.status === "open"
                       ? "bg-green-100 text-green-600"
                       : "bg-gray-100 text-gray-500"
@@ -81,10 +83,10 @@ const MyJobsPage = () => {
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <Link
                 href={`/my-jobs/${job._id}/applicants`}
-                className="text-xs text-[#1a3c6e] font-semibold hover:underline mr-2"
+                className="text-xs text-[#1a3c6e] font-semibold hover:underline"
               >
                 {job.applications_count ?? 0} Applicants
               </Link>

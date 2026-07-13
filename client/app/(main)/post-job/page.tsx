@@ -51,7 +51,6 @@ const PostJobPage = () => {
 
   const updateJob = useUpdateJob();
 
-  // Edit mode mein existing job data fetch karo
   const { data: jobData } = useJobs(
     { employer_id: user?.id, limit: 50 },
     isEditMode && !!user?.id,
@@ -117,14 +116,13 @@ const PostJobPage = () => {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold font-heading text-[#1a3c6e] mb-6 flex items-center gap-2">
+    <div className="px-3 sm:px-6 lg:px-10 py-4 sm:py-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold font-heading text-[#1a3c6e] mb-6 flex items-center gap-2">
         <FiBriefcase /> {isEditMode ? "Edit Job" : "Post a Job"}
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Info */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
           <div>
             <label className="text-xs text-gray-400 font-semibold">
               Job Title
@@ -254,8 +252,7 @@ const PostJobPage = () => {
           </div>
         </div>
 
-        {/* Skills */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Required Skills
           </h2>
@@ -278,29 +275,31 @@ const PostJobPage = () => {
               {skills.map((skill, index) => (
                 <div
                   key={skill.value}
-                  className="flex items-center gap-3 border border-gray-200 rounded-xl px-3 py-2"
+                  className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 border border-gray-200 rounded-xl px-3 py-2"
                 >
-                  <span className="flex-1 text-sm font-medium text-gray-700">
+                  <span className="flex-1 min-w-0 text-sm font-medium text-gray-700 truncate">
                     {skill.label}
                   </span>
-                  <label className="text-xs text-gray-400">
-                    Required Level
-                  </label>
-                  <select
-                    value={skill.required_level}
-                    onChange={(e) => {
-                      const updated = [...skills];
-                      updated[index].required_level = Number(e.target.value);
-                      setSkills(updated);
-                    }}
-                    className="border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
-                  >
-                    {[1, 2, 3, 4, 5].map((lvl) => (
-                      <option key={lvl} value={lvl}>
-                        {lvl}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-2">
+                    <label className="text-xs text-gray-400 shrink-0">
+                      Required Level
+                    </label>
+                    <select
+                      value={skill.required_level}
+                      onChange={(e) => {
+                        const updated = [...skills];
+                        updated[index].required_level = Number(e.target.value);
+                        setSkills(updated);
+                      }}
+                      className="border border-gray-200 rounded-lg px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e]"
+                    >
+                      {[1, 2, 3, 4, 5].map((lvl) => (
+                        <option key={lvl} value={lvl}>
+                          {lvl}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               ))}
             </div>
