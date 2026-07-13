@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "@/app/lib/axios";
 
-const useGetSavedJobs = (p0: { page: number; limit: number; search: string; status: string; }) => {
+const useGetSavedJobs = () => {
   return useQuery({
     queryKey: ["saved-jobs"],
     queryFn: async () => {

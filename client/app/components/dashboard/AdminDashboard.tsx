@@ -120,11 +120,10 @@ const AdminDashboard = () => {
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 text-sm">Abhi data nahi hai</p>
+            <p className="text-gray-400 text-sm">No data available yet.</p>
           )}
         </div>
 
-        {/* Add Skill Form — seed script ka replacement */}
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             Master Skill List mein Naya Skill Add Karo

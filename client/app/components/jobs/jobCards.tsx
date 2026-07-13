@@ -8,7 +8,6 @@ import useSaveJob from "@/app/hooks/jobs/useSaveJobs";
 const JobCard = ({ job }: { job: any }) => {
   const router = useRouter();
   const { saved, saveMutation } = useSaveJob(job._id);
-  console.log(job);
 
   return (
     <div className="w-full flex rounded-2xl border border-gray-200 mb-3 p-4 hover:shadow-md transition">

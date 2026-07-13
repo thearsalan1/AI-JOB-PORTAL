@@ -20,7 +20,6 @@ const Page = () => {
   const recentActivity = data?.recentActivity?.recent ?? [];
   const savedJobsCount = data?.savedJobs?.savedJobs?.length ?? 0;
 
-  // Time ke hisaab se greeting — pehle hamesha "Good Morning" tha
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
@@ -65,7 +64,6 @@ const Page = () => {
 
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
           {greeting}, {user?.name}! 👋
@@ -83,7 +81,6 @@ const Page = () => {
         </p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
         {statCards.map((item, index) => (
           <div
@@ -103,7 +100,6 @@ const Page = () => {
         ))}
       </div>
 
-      {/* Top Skills */}
       {stats?.top_skills?.length > 0 && (
         <div className="mt-6 bg-white rounded-2xl p-5">
           <p className="text-sm text-gray-500 mb-3">Your top skills</p>
@@ -121,9 +117,8 @@ const Page = () => {
       )}
 
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* LEFT - Recommended Jobs */}
         <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-5 gap-3">
             <h1 className="text-xl sm:text-2xl font-semibold flex items-center gap-2">
               <BsStars className="text-[#00a897]" />
               Recommended For You
@@ -143,13 +138,13 @@ const Page = () => {
               No recommendations yet — complete your profile first!
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {recommendations.map((job: any, index: number) => (
                 <div
                   key={index}
                   className="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition"
                 >
-                  <div className="flex justify-between items-start mb-3">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
                     <div>
                       <h2 className="font-semibold text-gray-800">
                         {job.job_id?.title}
@@ -167,7 +162,7 @@ const Page = () => {
                       ${job.job_id?.salary_min?.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-sm text-gray-500">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm text-gray-500 gap-2">
                     <span>{new Date(job.createdAt).toLocaleDateString()}</span>
                     <button
                       onClick={() => router.push(`/jobs/${job.job_id?._id}`)}
@@ -182,8 +177,7 @@ const Page = () => {
           )}
         </div>
 
-        {/* RIGHT - Recently Viewed */}
-        <div className="hidden lg:block">
+        <div className="lg:block">
           <div className="bg-white rounded-2xl p-4">
             <h1 className="text-xl sm:text-2xl font-semibold mb-5">
               Recently Viewed

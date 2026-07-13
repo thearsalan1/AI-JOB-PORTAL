@@ -115,7 +115,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
         "Password Reset Request - AI Job Portal 🔐",
         passwordResetEmailTemplate(user.name, otp),
       );
-      console.log("OTP email sent successfully");
     } catch (emailError) {
       console.error("Failed to send OTP email:", emailError);
       return res

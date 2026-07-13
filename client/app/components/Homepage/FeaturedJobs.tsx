@@ -1,12 +1,12 @@
-"use client";
 import Link from "next/link";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
-import { useJobs } from "@/app/hooks/jobs/useJobs";
 
-const FeaturedJobs = () => {
-  const { data, isLoading } = useJobs({ limit: 6, sort: "newest" });
-  const jobs = data?.jobs ?? [];
+const FeaturedJobs = async () => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs?limit=6`, {
+    cache: "no-cache",
+  });
+  const data = await res.json();
 
   return (
     <section className="bg-gray-100 py-16 px-4 sm:px-10 font-heading">
@@ -21,14 +21,8 @@ const FeaturedJobs = () => {
           Opportunities you don't want to miss from verified employers.
         </p>
 
-        {isLoading && <p className="text-gray-400">Loading...</p>}
-
-        {!isLoading && jobs.length === 0 && (
-          <p className="text-gray-400">Abhi koi jobs available nahi hain.</p>
-        )}
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-          {jobs.map((job: any) => (
+          {data.jobs.map((job: any) => (
             <div
               key={job._id}
               className="bg-gray-50 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between"
@@ -52,7 +46,8 @@ const FeaturedJobs = () => {
                   </div>
                   <div className="flex items-center gap-1">
                     <MdAttachMoney />
-                    {job.salary_min?.toLocaleString()} - {job.salary_max?.toLocaleString()}
+                    {job.salary_min?.toLocaleString()} -{" "}
+                    {job.salary_max?.toLocaleString()}
                   </div>
                 </div>
               </div>
