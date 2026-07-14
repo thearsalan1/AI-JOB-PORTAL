@@ -32,7 +32,7 @@ const AllJobs = ({ filters }: { filters: any }) => {
   const handleFilterChange = () => setPage(1);
 
   return (
-    <div className="bg-white min-h-screen w-full rounded-2xl p-5">
+    <div className="bg-white  w-full rounded-2xl p-5">
       <div className="flex justify-between items-center">
         <div className="ml-5 mb-4">
           <h1 className="text-[#1a3c6e] font-bold text-4xl font-heading">
@@ -50,7 +50,7 @@ const AllJobs = ({ filters }: { filters: any }) => {
             isSearchable={false}
             onChange={(selected) => {
               setSortBy(selected as any);
-              setPage(1); // ← naya
+              setPage(1);
             }}
             classNames={{
               control: () =>

@@ -15,20 +15,19 @@ const JobCard = ({ job }: { job: any }) => {
         <HiOfficeBuilding size={20} color="#1a3c6e" />
       </div>
       <div className="w-full">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <div className="text-md font-semibold font-heading">
-              {job.title}
-            </div>
-            <span className="text-sm text-gray-400 mr-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-2">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-400 mt-1">
+            <span>
               <HiOfficeBuilding className="inline mr-1" />
               {job.company_name || "Company"}
             </span>
-            <span className="text-sm text-gray-400 mr-2">
+
+            <span>
               <MdLocationOn className="inline mr-1" />
               {job.location}
             </span>
-            <span className="text-sm text-gray-400 mr-2">
+
+            <span>
               <FaClock className="inline mr-1" />
               {new Date(job.createdAt).toLocaleDateString()}
             </span>
@@ -40,9 +39,11 @@ const JobCard = ({ job }: { job: any }) => {
           )}
         </div>
 
-        <p className="text-sm text-gray-400 mb-3">{job.description}</p>
+        <p className="text-sm text-gray-400 mb-3 line-clamp-2 break-words">
+          {job.description}
+        </p>
 
-        <div className="flex justify-between items-center w-full">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-4 w-full">
           <div className="flex gap-3 flex-wrap">
             <span className="text-xs py-1 px-2 rounded-2xl bg-gray-100">
               {job.job_type}
@@ -55,7 +56,7 @@ const JobCard = ({ job }: { job: any }) => {
               {job.salary_max?.toLocaleString()}
             </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex justify-between sm:justify-end items-center gap-3">
             <button
               onClick={() => saveMutation.mutate()}
               disabled={saveMutation.isPending}
@@ -71,7 +72,7 @@ const JobCard = ({ job }: { job: any }) => {
             </button>
             <button
               onClick={() => router.push(`/jobs/${job._id}`)}
-              className="px-4 py-1 rounded-2xl bg-[#1a3c6e] text-white hover:bg-blue-950 transition"
+              className="px-4 py-2 text-sm rounded-xl bg-[#1a3c6e] text-white"
             >
               Details
             </button>

@@ -37,7 +37,7 @@ const FilterJobs = ({ onApplyFilters }: FilterJobsProps) => {
     onApplyFilters(filters);
   };
   return (
-    <div className="p-2  h-full ">
+    <div className="bg-white rounded-2xl shadow-md p-5 lg:sticky lg:top-24">
       <div className="flex justify-between items-center border-b-2 border-gray-300  px-6 py-6 mb-5">
         <div className="flex gap-2 items-center">
           <FaFilter color="#1a3c6e" />
@@ -114,7 +114,7 @@ const FilterJobs = ({ onApplyFilters }: FilterJobsProps) => {
         <h3 className="text-[#1a3c6e] font-semibold text-md mb-3">
           Experience Level
         </h3>
-        <div className="text-sm flex gap-7 items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
           {ExperienceLevel.map((exp) => (
             <label
               key={exp.value}

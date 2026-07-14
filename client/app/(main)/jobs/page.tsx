@@ -9,11 +9,12 @@ const page = () => {
     setFilters(filters);
   };
   return (
-    <div className="flex flex-col lg:flex-row min-w-full min-h-screen gap-4 sm:gap-6 px-3 sm:px-6 lg:px-0 py-4 sm:py-0">
-      <div className="w-full lg:w-1/3 shrink-0">
+    <div className="flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:w-80">
         <FilterJobs onApplyFilters={handleFilters} />
       </div>
-      <div className="w-full lg:min-w-2/3">
+
+      <div className="flex-1 min-w-0">
         <AllJobs filters={filters} />
       </div>
     </div>

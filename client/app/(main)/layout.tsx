@@ -21,18 +21,18 @@ export default function MainLayout({
 
   return (
     <div className="flex min-h-screen relative">
-      {showSidebar && (
+      {/* {showSidebar && (
         <div
           className="fixed inset-0 bg-black/40 z-40 md:hidden"
           onClick={() => setShowSidebar(false)}
         />
-      )}
+      )} */}
 
       <aside
-        className={`fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-300 z-50
-          transform transition-transform duration-200 ease-in-out
-          md:static md:translate-x-0 md:z-auto md:w-64 md:shrink-0
-          ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed max-h-screen bg-white inset-y-0 left-0 w-64 border-r border-gray-300 z-50
+    transform transition-transform duration-200 ease-in-out
+    md:translate-x-0 md:z-auto md:w-64 md:shrink-0
+    ${showSidebar ? "translate-x-0" : "hidden"}`}
       >
         <Sidebar />
       </aside>
@@ -41,7 +41,10 @@ export default function MainLayout({
         <header className="w-full border-b border-gray-300 bg-white flex items-center justify-between px-2 sm:px-4">
           <button
             className="md:hidden p-2 text-gray-600 shrink-0"
-            onClick={() => setShowSidebar((prev) => !prev)}
+            onClick={() => {
+              setShowSidebar((prev) => !prev);
+              console.log("showSidebar:", showSidebar);
+            }}
             aria-label="Toggle sidebar"
           >
             {showSidebar ? <HiX size={22} /> : <HiOutlineMenuAlt2 size={22} />}

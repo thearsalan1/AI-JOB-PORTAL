@@ -57,40 +57,48 @@ const Sidebar = () => {
         : seekerNavigates;
 
   return (
-    <aside className="flex flex-col justify-between h-full p-4 font-heading">
-      {/* Top Links */}
-      <div className="space-y-2">
-        {navigates.map((item) => {
-          const isActive = pathname === item.href;
-
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition
-                ${
-                  isActive
-                    ? "bg-[#1a3c6e] text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                }`}
-            >
-              <span className="text-lg">{item.icon}</span>
-              {item.label}
-            </Link>
-          );
-        })}
+    <div className="sticky min-h-screen flex flex-col p-4 font-heading bg-red-400 w-full z-50">
+      <div className="h-[20%] right-10">
+        a 
       </div>
-
-      {/* Logout */}
-      <button
-        onClick={handleLogOut}
-        className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition"
-      >
-        <IoExitOutline size={18} />
-        Log out
-      </button>
-    </aside>
+      <aside className="flex flex-col justify-between  h-[80%]">
+        a
+      </aside>
+    </div>
   );
 };
 
 export default Sidebar;
+
+
+// {/* Top Links */}
+//         <div className="space-y-2">
+//           {navigates.map((item) => {
+//             const isActive = pathname === item.href;
+
+//             return (
+//               <Link
+//                 key={item.label}
+//                 href={item.href}
+//                 className={`flex items-center gap-3 px-4 py-2 rounded-xl text-sm transition
+//                 ${
+//                   isActive
+//                     ? "bg-[#1a3c6e] text-white"
+//                     : "text-gray-600 hover:bg-gray-100"
+//                 }`}
+//               >
+//                 <span className="text-lg">{item.icon}</span>
+//                 {item.label}
+//               </Link>
+//             );
+//           })}
+//         </div>
+
+//         {/* Logout */}
+//         <button
+//           onClick={handleLogOut}
+//           className="w-full rounded-xl px-4 py-2 bg-[#1a3c6e] text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#142f55] transition"
+//         >
+//           <IoExitOutline size={18} />
+//           Log out
+//         </button>
