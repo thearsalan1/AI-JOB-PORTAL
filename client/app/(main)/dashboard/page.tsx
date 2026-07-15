@@ -13,7 +13,8 @@ import AdminDashboard from "@/app/components/dashboard/AdminDashboard";
 const Page = () => {
   const { user } = useAuthStore();
   const router = useRouter();
-  const { data, isLoading } = useDashboard();
+  const isSeeker = !user?.role || user.role === "seeker";
+  const { data, isLoading } = useDashboard(isSeeker);
 
   const stats = data?.stats;
   const recommendations = data?.recommendations?.recommendations ?? [];

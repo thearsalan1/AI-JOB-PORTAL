@@ -37,7 +37,8 @@ const UsersPage = () => {
           placeholder="Search by name/email..."
           value={search}
           onChange={(e) => {
-            (setSearch(e.target.value), setPage(1));
+            setSearch(e.target.value);
+            setPage(1);
           }}
           className="border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-[#1a3c6e] flex-1 min-w-[200px]"
         />
@@ -81,7 +82,7 @@ const UsersPage = () => {
               <p className="text-sm text-gray-400 truncate">{u.email}</p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <select
                 value={u.role}
                 onChange={(e) =>
@@ -110,6 +111,7 @@ const UsersPage = () => {
           </div>
         ))}
       </div>
+
       <Pagination
         currentPage={page}
         totalPages={data?.pagination?.pages ?? 1}

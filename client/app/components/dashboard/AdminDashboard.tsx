@@ -126,7 +126,7 @@ const AdminDashboard = () => {
 
         <div className="bg-white rounded-2xl p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Master Skill List mein Naya Skill Add Karo
+            Add new skills in master skill list.
           </h2>
           <form onSubmit={handleAddSkill} className="space-y-3">
             <input
