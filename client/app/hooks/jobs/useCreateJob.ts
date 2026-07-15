@@ -8,7 +8,7 @@ interface CreateJobPayload {
   salary_min: number;
   salary_max: number;
   location: string;
-  remote: string;
+  remote: boolean;
   job_type: string;
   experience_level: string;
   skills: {

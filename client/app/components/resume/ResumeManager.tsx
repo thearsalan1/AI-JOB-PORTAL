@@ -116,12 +116,12 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <p className="text-sm text-gray-400">PDF only, max 5MB</p>
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploadResume.isPending}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#1a3c6e] text-white text-sm font-semibold hover:bg-blue-950 transition disabled:opacity-50"
         >
           <MdUploadFile size={16} />
           {uploadResume.isPending ? "Uploading..." : "Upload Resume"}
@@ -137,9 +137,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
 
       {isLoading && <p className="text-gray-400 text-sm">Loading...</p>}
       {!isLoading && resumes.length === 0 && (
-        <p className="text-gray-400 text-sm">
-          No resume uploaded.
-        </p>
+        <p className="text-gray-400 text-sm">No resume uploaded.</p>
       )}
 
       <div className="space-y-3">
@@ -149,14 +147,14 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
           return (
             <div
               key={resume._id}
-              className="border border-gray-200 rounded-xl px-4 py-3"
+              className="border border-gray-200 rounded-xl px-3 sm:px-4 py-3"
             >
               {/* Row header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <MdPictureAsPdf size={22} className="text-red-500" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <MdPictureAsPdf size={22} className="text-red-500 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-gray-700 truncate">
                       {resume.file_name}
                     </p>
                     <p className="text-xs text-gray-400">
@@ -166,7 +164,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <button
                     onClick={() =>
                       setExpandedId(isExpanded ? null : resume._id)
@@ -241,7 +239,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
 
                   {!detailLoading && detail?.parsedData && (
                     <div className="space-y-3 text-sm">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-1">
                         <span className="text-gray-400">Confidence Score</span>
                         <span className="font-semibold text-[#1a3c6e]">
                           {detail.parsedData.confidence_score}%

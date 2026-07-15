@@ -2,13 +2,13 @@
 import useResetPass from "@/app/hooks/auth/useResetPass";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import toast from "react-hot-toast";
 import { FaArrowLeft, FaArrowRight, FaEye, FaShieldAlt } from "react-icons/fa";
 import { FiBriefcase } from "react-icons/fi";
 import { IoLockClosedOutline } from "react-icons/io5";
 
-const Page = () => {
+const ResetPasswordForm = () => {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -185,4 +185,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ResetPasswordForm;
