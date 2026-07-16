@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiBriefcase } from "react-icons/fi";
 import { useAuthStore } from "@/app/store/authStore";
@@ -322,4 +322,12 @@ const PostJobPage = () => {
   );
 };
 
-export default PostJobPage;
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <PostJobPage />
+    </Suspense>
+  );
+};
+
+export default Page;

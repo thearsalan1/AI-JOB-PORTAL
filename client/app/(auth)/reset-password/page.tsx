@@ -185,4 +185,12 @@ const ResetPasswordForm = () => {
   );
 };
 
-export default ResetPasswordForm;
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen" />}>
+      <ResetPasswordForm />
+    </Suspense>
+  );
+};
+
+export default Page;
