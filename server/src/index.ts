@@ -22,7 +22,9 @@ app.use(
       "http://localhost:3000",
       "http://client:3000",
       "http://ai-job-portal-client:3000",
-    ],
+      "https://ai-job-portal-production-d695.up.railway.app",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean) as string[],
     credentials: true,
   }),
 );
