@@ -11,15 +11,17 @@ COPY . .
 ARG API_URL
 ENV API_URL=$API_URL
 
-ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_API_URL=https://ai-job-portal-production-5e47.up.railway.app/api
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build
+
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
+ENV API_URL=https://ai-job-portal-production-5e47.up.railway.app/api
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
@@ -30,6 +32,5 @@ COPY --from=builder /app/public ./public
 USER appuser
 
 EXPOSE 3000
-ENV PORT=3000
 
 CMD ["node", "server.js"]
