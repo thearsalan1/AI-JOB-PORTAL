@@ -3,7 +3,7 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
 
 const FeaturedJobs = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs?limit=6`, {
+  const res = await fetch(`${process.env.API_URL}/jobs?limit=6`, {
     cache: "no-cache",
   });
   const data = await res.json();

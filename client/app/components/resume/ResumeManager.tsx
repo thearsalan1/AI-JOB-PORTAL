@@ -49,7 +49,7 @@ const ResumeManager = ({ onApplyToProfile }: ResumeManagerProps) => {
   const toggleSharing = useToggleResumeSharing();
 
   const handleCopyLink = (resumeId: string) => {
-    const link = `${process.env.NEXT_PUBLIC_API_URL}/resume/${resumeId}/shared`;
+    const link = `${process.env.API_URL}/resume/${resumeId}/shared`;
     navigator.clipboard.writeText(link);
     toast.success("Link copied!");
   };
