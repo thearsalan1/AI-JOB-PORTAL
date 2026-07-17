@@ -3,10 +3,20 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { MdAttachMoney } from "react-icons/md";
 
 const FeaturedJobs = async () => {
-  const res = await fetch(`${process.env.API_URL}/jobs?limit=6`, {
-    cache: "no-cache",
-  });
-  const data = await res.json();
+  let jobs: any[] = [];
+
+  try {
+    const apiUrl = process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL;
+    if (apiUrl) {
+      const res = await fetch(`${apiUrl}/jobs?limit=6`, { cache: "no-cache" });
+      if (res.ok) {
+        const data = await res.json();
+        jobs = data.jobs ?? [];
+      }
+    }
+  } catch {
+    jobs = [];
+  }
 
   return (
     <section className="bg-gray-100 py-16 px-4 sm:px-10 font-heading">
@@ -22,7 +32,12 @@ const FeaturedJobs = async () => {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
-          {data.jobs.map((job: any) => (
+          {jobs.length === 0 && (
+            <p className="col-span-3 text-center text-gray-400 py-10">
+              No featured jobs available right now.
+            </p>
+          )}
+          {jobs.map((job: any) => (
             <div
               key={job._id}
               className="bg-gray-50 rounded-xl p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between"

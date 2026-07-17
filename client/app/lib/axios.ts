@@ -1,10 +1,14 @@
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
+const baseURL =
+  typeof window === "undefined"
+    ? process.env.API_URL
+    : process.env.NEXT_PUBLIC_API_URL;
+
 const api = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL,
 });
-console.log("API URL:", process.env.API_URL);
 
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
@@ -19,7 +23,9 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = "/sign-in";
+      if (typeof window !== "undefined") {
+        window.location.href = "/sign-in";
+      }
     }
     return Promise.reject(error);
   },

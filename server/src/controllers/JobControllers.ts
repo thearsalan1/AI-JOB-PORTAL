@@ -8,13 +8,14 @@ import { EmployerProfile } from "../models/EmployerProfile";
 import { User } from "../models/User";
 
 export const createJob = async (req: AuthRequest, res: Response) => {
-  let session: mongoose.ClientSession | null = null;
+  let createdJobId: mongoose.Types.ObjectId | null = null;
   try {
     if (req.user?.role !== "employer") {
       return res
         .status(403)
         .json({ message: "Only employers can create jobs" });
     }
+
     const employerProfile = await EmployerProfile.findOne({
       user_id: req.user!.userId,
     });
@@ -30,41 +31,34 @@ export const createJob = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: "Skills must be an array" });
     }
 
-    session = await mongoose.startSession();
-    session.startTransaction();
-
     const job = new Job({
       employer_id: req.user!.userId,
       company_name: companyName,
       ...jobData,
       skills: skills.map((s) => s.skill_id),
     });
-    await job.save({ session });
+    await job.save();
+    createdJobId = job._id as mongoose.Types.ObjectId;
 
-    const jobId = job._id;
     await Promise.all(
-      skills.map((s) => {
-        const jobSkill = new JobSkill({
-          job_id: jobId,
+      skills.map((s) =>
+        new JobSkill({
+          job_id: createdJobId,
           skill_id: s.skill_id,
           required_level: s.required_level ?? 3,
-        });
-        return jobSkill.save({ session });
-      }),
+        }).save(),
+      ),
     );
 
-    await session.commitTransaction();
     res.status(201).json(job);
   } catch (error) {
-    if (session) {
-      await session.abortTransaction();
+    // Manual rollback — agar job save hua tha to usse delete karo
+    if (createdJobId) {
+      await Job.findByIdAndDelete(createdJobId).catch(() => {});
+      await JobSkill.deleteMany({ job_id: createdJobId }).catch(() => {});
     }
     console.error(error);
     res.status(500).json({ error: "Server error" });
-  } finally {
-    if (session) {
-      session.endSession();
-    }
   }
 };
 
