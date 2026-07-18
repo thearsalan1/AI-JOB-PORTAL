@@ -28,6 +28,7 @@
     "multer": "^2.0.2",
     "natural": "^8.1.0",
     "nodemailer": "^8.0.1",
+    "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.5.207",
     "react-select": "^5.10.2",
     "uuid": "^13.0.0"

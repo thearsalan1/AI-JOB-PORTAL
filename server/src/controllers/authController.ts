@@ -39,15 +39,13 @@ export const register = async (req: Request, res: Response) => {
       });
     }
 
-    try {
-      await sendEmail(
-        email,
-        "Welcome to Our Job Portal",
-        welcomeEmailTemplate(name),
-      );
-    } catch (emailError) {
+    sendEmail(
+      email,
+      "Welcome to HireHub",
+      welcomeEmailTemplate(name),
+    ).catch((emailError) => {
       console.error("Failed to send welcome email:", emailError);
-    }
+    });
 
     res.status(201).json({
       message: "User created successfully",

@@ -1,20 +1,13 @@
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import * as pdfParseModule from "pdf-parse";
+
+const pdfParse = (pdfParseModule as any).default ?? pdfParseModule;
 
 export const extractTextFromPDF = async (buffer: Buffer): Promise<string> => {
-  const uint8Array = new Uint8Array(buffer);
-
-  const pdf = await pdfjsLib.getDocument({ data: uint8Array }).promise;
-
-  let fullText = "";
-
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    const pageText = content.items
-      .map((item: any) => ("str" in item ? item.str : ""))
-      .join(" ");
-    fullText += pageText + "\n";
+  try {
+    const data = await pdfParse(buffer);
+    return data.text ?? "";
+  } catch (error) {
+    console.error("PDF extraction error:", error);
+    return "";
   }
-
-  return fullText;
 };
